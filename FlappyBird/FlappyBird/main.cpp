@@ -1,9 +1,9 @@
 ﻿#include "stdafx.h"
-#include "GameMenager.h"
+#include "GameManager.h"
 
 int main()
 {
-	GameMenager game;
+	GameManager game;
 
 	while (game.isRunning())
 	{

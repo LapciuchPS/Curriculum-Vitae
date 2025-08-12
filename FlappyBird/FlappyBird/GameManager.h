@@ -1,18 +1,19 @@
 #pragma once
 
-class GameMenager
+class GameManager
 {
 private:
 	//private variables
 	sf::RenderWindow gameWindow;
+	std::optional<sf::Event> currentEvent;
 
 	//private functions
 	void initWindow();
 
 public:
 	//public functions
-	GameMenager();
-	~GameMenager();
+	GameManager();
+	~GameManager();
 
 	
 	inline bool isRunning() const
