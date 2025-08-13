@@ -10,7 +10,7 @@ private:
 	//private functions
 	void initPlayerSpriteSheet();
 
-	ResourceManager()
+	inline ResourceManager()
 	{
 		this->initPlayerSpriteSheet();
 	}
@@ -20,7 +20,7 @@ private:
 	
 public:
 	//public functions
-	static ResourceManager& getResources()
+	inline static ResourceManager& getResources()
 	{
 		static ResourceManager resources;
 		return resources;
