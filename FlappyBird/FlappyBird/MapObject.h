@@ -19,6 +19,10 @@ protected:
 		this->objectHitbox.size = newSize;
 	}
 
+	inline bool checkIntersection(const sf::FloatRect& otherObject)
+	{
+		return this->objectHitbox.findIntersection(otherObject).has_value();
+	}
 
 public:
 	//public functions
@@ -34,6 +38,11 @@ public:
 	inline const sf::Vector2f& getObjectSize() const
 	{
 		return this->objectHitbox.size;
+	}
+
+	inline const sf::FloatRect& getObjectHitbox() const
+	{
+		return this->objectHitbox;
 	}
 
 	virtual void update(const float deltaTime) = 0;
