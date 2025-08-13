@@ -1,4 +1,5 @@
 #pragma once
+#include "Player.h"
 
 class GameManager
 {
@@ -6,6 +7,11 @@ private:
 	//private variables
 	sf::RenderWindow gameWindow;
 	std::optional<sf::Event> currentEvent;
+	sf::Clock gameClock;
+	float deltaTime = 0;
+
+	//Player
+	std::optional<Player> player;
 
 	//private functions
 	void initWindow();

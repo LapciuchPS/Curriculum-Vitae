@@ -5,22 +5,22 @@ class Player: public MapObject
 {
 private:
 	//private variables
-	std::optional<sf::FloatRect> playerShape;
-	std::optional<sf::Sprite> playerSprite;
+	sf::FloatRect playerShape;
+	sf::Sprite playerSprite;
 
-	float velocityY;
-	bool canJump;
+	float jumpingSpeed;
+	float fallingSpeed;
+	float jumpDistanceLeft;
 
 	//for testing
 	sf::RectangleShape playerSketch;
 
-	//private functions
-	void initPlayerVariables();
-
 public:
 	//public functions
-	Player(sf::Vector2f playerPosition, sf::Vector2f playerSize);
+	Player(sf::Vector2f playerPosition, sf::Vector2f playerSize = { 50,50 });
 
 	void jump();
+	void updatePlayer(const float deltaTime);
+	void drawPlayer(sf::RenderTarget& target);
 };
 
