@@ -44,14 +44,14 @@ void GameManager::updateGame()
 		}
 	}
 
-	this->player->updatePlayer(this->deltaTime);
+	this->player->update(this->deltaTime);
 }
 
 void GameManager::renderGame()
 {
 	this->gameWindow.clear();
 
-	this->player->drawPlayer(this->gameWindow);
+	this->player->draw(this->gameWindow);
 
 	this->gameWindow.display();
 }

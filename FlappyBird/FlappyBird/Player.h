@@ -5,7 +5,6 @@ class Player: public MapObject
 {
 private:
 	//private variables
-	sf::FloatRect playerShape;
 	sf::Sprite playerSprite;
 
 	float jumpingSpeed;
@@ -17,10 +16,10 @@ private:
 
 public:
 	//public functions
-	Player(sf::Vector2f playerPosition, sf::Vector2f playerSize = { 50,50 });
+	Player(const sf::Vector2f& playerPosition, const sf::Vector2f& playerSize = {50.f,50.f});
 
 	void jump();
-	void updatePlayer(const float deltaTime);
-	void drawPlayer(sf::RenderTarget& target);
+	void update(const float deltaTime) override;
+	void draw(sf::RenderTarget& target) override;
 };
 
