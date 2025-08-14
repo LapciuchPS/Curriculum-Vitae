@@ -12,12 +12,19 @@ bool InteractableObject::checkCollision(const sf::FloatRect& otherHitbox)
 		return MapObject::getObjectHitbox().findIntersection(otherHitbox).has_value();
 }
 
+void InteractableObject::draw(sf::RenderTarget& target, const sf::Sprite& objectSprite) const
+{
+	if (this->isOnScreen)
+		target.draw(objectSprite);
+}
+
 //Pipe class
-Pipe::Pipe(const sf::Vector2f& pipePosition, const sf::Vector2f& pipeSize) :
-	InteractableObject(pipePosition, pipeSize, objectID::pipeMiddle)
+Pipe::Pipe(const sf::Vector2f& pipePosition, const sf::Vector2f& pipeSize, const objectID& ID) :
+	InteractableObject(pipePosition, pipeSize, ID)
 {
 }
 
 void Pipe::update(const float deltaTime)
 {
+	
 }

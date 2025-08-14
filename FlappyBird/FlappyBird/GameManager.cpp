@@ -51,7 +51,7 @@ void GameManager::renderGame()
 {
 	this->gameWindow.clear();
 
-	this->player->draw(this->gameWindow);
+	this->player->drawPlayer(this->gameWindow);
 
 	this->gameWindow.display();
 }

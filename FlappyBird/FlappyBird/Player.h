@@ -19,6 +19,9 @@ public:
 
 	void jump();
 	void update(const float deltaTime) override;
-	void draw(sf::RenderTarget& target) override;
+	void draw(sf::RenderTarget& target, const sf::Sprite& objectSprite) const;
+
+	//for testing
+	void drawPlayer(sf::RenderTarget& target);
 };
 

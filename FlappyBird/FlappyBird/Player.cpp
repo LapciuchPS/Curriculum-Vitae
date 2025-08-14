@@ -20,27 +20,25 @@ void Player::jump()
 
 void Player::update(const float deltaTime)
 {
-	sf::Vector2f currentPlayerPosition = MapObject::getObjectPosition();
 
 	if (this->jumpDistanceLeft > 0.f)
 	{
 		float move = this->jumpingSpeed * deltaTime;
-
 		this->jumpDistanceLeft -= move;
-		currentPlayerPosition.y -= move;
-
+		MapObject::moveObject({ 0.f, -move });
 	}
-	else currentPlayerPosition.y += this->fallingSpeed * deltaTime;
-
-
-	MapObject::setObjectPosition(currentPlayerPosition);
+	else MapObject::moveObject({ 0.f, this->fallingSpeed * deltaTime });
 
 	//for testing
 	this->playerSketch.setPosition(MapObject::getObjectPosition());
 }
 
+void Player::draw(sf::RenderTarget& target, const sf::Sprite& objectSprite) const
+{
+}
 
-void Player::draw(sf::RenderTarget& target)
+//for testing
+void Player::drawPlayer(sf::RenderTarget& target)
 {
 	target.draw(this->playerSketch);
 }

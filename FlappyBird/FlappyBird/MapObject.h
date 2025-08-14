@@ -9,6 +9,7 @@ private:
 
 protected:
 	//protected functions
+	//setters
 	inline void setObjectPosition(const sf::Vector2f& newPosition)
 	{
 		this->objectHitbox.position = newPosition;
@@ -19,12 +20,21 @@ protected:
 		this->objectHitbox.size = newSize;
 	}
 
+	inline void moveObject(sf::Vector2f move)
+	{
+		this->objectHitbox.position += move;
+	}
+
 public:
 	//public functions
 	inline MapObject(const sf::Vector2f& position = sf::Vector2f({0.f,0.f}) , const sf::Vector2f& size = sf::Vector2f({0.f,0.f}))
 		: objectHitbox(position, size)
 	{ }
 
+	virtual void update(const float deltaTime) = 0;
+	virtual void draw(sf::RenderTarget& target, const sf::Sprite& objectSprite) const = 0;
+
+	//getters
 	inline const sf::Vector2f& getObjectPosition() const
 	{
 		return this->objectHitbox.position;
@@ -39,8 +49,5 @@ public:
 	{
 		return this->objectHitbox;
 	}
-
-	virtual void update(const float deltaTime) = 0;
-	virtual void draw(sf::RenderTarget& target) = 0;
 };
 
