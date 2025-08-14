@@ -21,10 +21,15 @@ public:
 class Pipe : public InteractableObject
 {
 private:
+	//for testing
+	sf::RectangleShape pipeSketch;
 
 public:
 	Pipe(const sf::Vector2f& pipePosition, const sf::Vector2f& pipeSize = { 100.f, 100.f }, const objectID& ID = objectID::pipeMiddle);
 
 	void update(const float deltaTime) override;
+
+	//for testing
+	void drawPipe(sf::RenderTarget& target);
 };
 

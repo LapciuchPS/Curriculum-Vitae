@@ -22,9 +22,20 @@ void InteractableObject::draw(sf::RenderTarget& target, const sf::Sprite& object
 Pipe::Pipe(const sf::Vector2f& pipePosition, const sf::Vector2f& pipeSize, const objectID& ID) :
 	InteractableObject(pipePosition, pipeSize, ID)
 {
+
+	//for testing
+	this->pipeSketch.setPosition(pipePosition);
+	this->pipeSketch.setSize(pipeSize);
+	this->pipeSketch.setFillColor(sf::Color::Yellow);
 }
 
 void Pipe::update(const float deltaTime)
 {
-	
+	MapObject::moveObject({ -100.f, 0.f });
+}
+
+//for testing
+void Pipe::drawPipe(sf::RenderTarget& target)
+{
+	target.draw(this->pipeSketch);
 }
