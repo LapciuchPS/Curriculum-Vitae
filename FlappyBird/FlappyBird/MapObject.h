@@ -19,11 +19,6 @@ protected:
 		this->objectHitbox.size = newSize;
 	}
 
-	inline bool checkIntersection(const sf::FloatRect& otherObject)
-	{
-		return this->objectHitbox.findIntersection(otherObject).has_value();
-	}
-
 public:
 	//public functions
 	inline MapObject(const sf::Vector2f& position = sf::Vector2f({0.f,0.f}) , const sf::Vector2f& size = sf::Vector2f({0.f,0.f}))

@@ -5,7 +5,6 @@ class Player: public MapObject
 {
 private:
 	//private variables
-	sf::Sprite playerSprite;
 
 	float jumpingSpeed;
 	float fallingSpeed;

@@ -4,8 +4,7 @@
 
 Player::Player(const sf::Vector2f& playerPosition, const sf::Vector2f& playerSize) :
 	MapObject(playerPosition, playerSize),
-	jumpingSpeed(350.f), fallingSpeed(400.f), jumpDistanceLeft(0.f),
-	playerSprite(ResourceManager::getResources().getPlayerSpriteSheet())
+	jumpingSpeed(350.f), fallingSpeed(400.f), jumpDistanceLeft(0.f)
 {
 	
 	//for testing
