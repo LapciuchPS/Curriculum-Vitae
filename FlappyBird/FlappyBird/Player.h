@@ -18,8 +18,8 @@ public:
 	Player(const sf::Vector2f& playerPosition, const sf::Vector2f& playerSize = {50.f,50.f});
 
 	void jump();
-	void update(const float deltaTime) override;
-	void draw(sf::RenderTarget& target, const sf::Sprite& objectSprite) const;
+	void update(const float& deltaTime) override;
+	void draw(sf::RenderTarget& target);
 
 	//for testing
 	void drawPlayer(sf::RenderTarget& target);

@@ -1,11 +1,13 @@
 #pragma once
-#include "stdafx.h"
+#include "Scene.h"
 
-class MapObject
+class MapObject : public SceneInterface
 {
 private:
 	//private variables
 	sf::FloatRect objectHitbox;
+	objectID ID;
+	bool isOnScreen;
 
 protected:
 	//protected functions
@@ -27,13 +29,15 @@ protected:
 
 public:
 	//public functions
-	inline MapObject(const sf::Vector2f& position = sf::Vector2f({0.f,0.f}) , const sf::Vector2f& size = sf::Vector2f({0.f,0.f}))
-		: objectHitbox(position, size)
+	inline MapObject(const SceneInterface::objectID ID, const sf::Vector2f& position = sf::Vector2f({0.f,0.f}) , const sf::Vector2f& size = sf::Vector2f({0.f,0.f}), bool isOnScreen = false)
+		: ID(ID), objectHitbox(position, size), isOnScreen(isOnScreen)
 	{ }
 
-	virtual void update(const float deltaTime) = 0;
-	virtual void draw(sf::RenderTarget& target, const sf::Sprite& objectSprite) const = 0;
-
+	inline bool checkCollision(const sf::FloatRect& otherHitbox)
+	{
+		return this->objectHitbox.findIntersection(otherHitbox).has_value();
+	}
+	
 	//getters
 	inline const sf::Vector2f& getObjectPosition() const
 	{
@@ -48,6 +52,11 @@ public:
 	inline const sf::FloatRect& getObjectHitbox() const
 	{
 		return this->objectHitbox;
+	}
+
+	inline const objectID& getObjectID() const override
+	{
+		return this->ID;
 	}
 };
 

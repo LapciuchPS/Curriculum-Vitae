@@ -1,5 +1,5 @@
 #pragma once
-#include "Player.h"
+#include "Scene.h"
 
 class GameManager
 {
@@ -10,8 +10,8 @@ private:
 	sf::Clock gameClock;
 	float deltaTime = 0;
 
-	//Player
-	std::optional<Player> player;
+	//Scenes
+	Scene gameScene;
 
 	//private functions
 	void initWindow();

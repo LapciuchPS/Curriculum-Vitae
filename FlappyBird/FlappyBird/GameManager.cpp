@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "GameManager.h"
+#include "Player.h"
+#include "InteractableObjects.h"
 
 //private functions
 
@@ -15,8 +17,11 @@ GameManager::GameManager()
 {
 	this->initWindow();
 
-	this->player.emplace(sf::Vector2f(this->gameWindow.getSize().x / 3.0f, this->gameWindow.getSize().y / 2.0f));
+	//init Player
+	this->gameScene.addObject(std::make_unique<Player>(sf::Vector2f(this->gameWindow.getSize().x / 3.0f, this->gameWindow.getSize().y / 2.0f)));
 
+	//init Pipe 
+	this->gameScene.addObject(std::make_unique<Pipe>(sf::Vector2f(this->gameWindow.getSize().x,400.f)));
 }
 
 GameManager::~GameManager()
@@ -39,19 +44,18 @@ void GameManager::updateGame()
 			const sf::Event::KeyReleased* key = this->currentEvent->getIf<sf::Event::KeyReleased>();
 
 			if (key->code == sf::Keyboard::Key::Space)
-				this->player->jump();
-
+				this->gameScene.getPlayer()->jump();
 		}
 	}
 
-	this->player->update(this->deltaTime);
+	this->gameScene.update(deltaTime);
 }
 
 void GameManager::renderGame()
 {
 	this->gameWindow.clear();
 
-	this->player->drawPlayer(this->gameWindow);
+	this->gameScene.draw(this->gameWindow);
 
 	this->gameWindow.display();
 }

@@ -3,7 +3,7 @@
 #include "ResourceManager.h"
 
 Player::Player(const sf::Vector2f& playerPosition, const sf::Vector2f& playerSize) :
-	MapObject(playerPosition, playerSize),
+	MapObject(SceneInterface::objectID::player, playerPosition, playerSize),
 	jumpingSpeed(350.f), fallingSpeed(400.f), jumpDistanceLeft(0.f)
 {
 	
@@ -18,7 +18,7 @@ void Player::jump()
 	this->jumpDistanceLeft = 150.f;
 }
 
-void Player::update(const float deltaTime)
+void Player::update(const float& deltaTime)
 {
 
 	if (this->jumpDistanceLeft > 0.f)
@@ -33,8 +33,9 @@ void Player::update(const float deltaTime)
 	this->playerSketch.setPosition(MapObject::getObjectPosition());
 }
 
-void Player::draw(sf::RenderTarget& target, const sf::Sprite& objectSprite) const
+void Player::draw(sf::RenderTarget& target)
 {
+	this->drawPlayer(target);
 }
 
 //for testing
