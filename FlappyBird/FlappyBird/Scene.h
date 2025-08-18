@@ -5,7 +5,7 @@ class Player;
 class SceneInterface
 {
 protected:
-	enum class objectID { undefined = 0, player, pipeEnd, pipeMiddle, enemyBird, cloud, wind };
+	enum class objectID { undefined = 0, player, pipeEndUp, pipeEndDown, pipeMiddle, enemyBird, cloud, wind };
 
 public:
 	~SceneInterface() = default;

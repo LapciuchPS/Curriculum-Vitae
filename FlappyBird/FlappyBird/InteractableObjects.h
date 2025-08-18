@@ -1,16 +1,17 @@
 #pragma once
 #include "MapObject.h"
 
-class Pipe : public MapObject
+//Pipe
+class PipeElement : public MapObject
 {
 private:
 	float pipeSpeed = 200.f;
 
 	//for testing
-	sf::RectangleShape pipeSketch;
+	sf::RectangleShape pipeElementSketch;
 
 public:
-	Pipe(const sf::Vector2f& pipePosition, const sf::Vector2f& pipeSize = { 100.f, 100.f });
+	PipeElement(const sf::Vector2f& pipePosition, objectID ID = objectID::pipeMiddle, const sf::Vector2f& pipeSize = { 100.f, 100.f });
 
 	void update(const float& deltaTime) override;
 	void draw(sf::RenderTarget& target) override;
@@ -19,3 +20,15 @@ public:
 	void drawPipe(sf::RenderTarget& target);
 };
 
+class Pipe : public SceneInterface
+{
+private:
+	std::vector<std::unique_ptr<PipeElement>> pipe;
+
+public:
+	Pipe(const sf::Vector2f& holePosition, int windowSizeY);
+
+	void update(const float& deltaTime) override;
+	void draw(sf::RenderTarget& target) override;
+	//const objectID& getObjectID() const override;
+};

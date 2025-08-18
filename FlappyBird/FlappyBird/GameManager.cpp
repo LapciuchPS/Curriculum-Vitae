@@ -4,7 +4,6 @@
 #include "InteractableObjects.h"
 
 //private functions
-
 void GameManager::initWindow()
 {
 	this->gameWindow = sf::RenderWindow(sf::VideoMode({ 1920, 1080 }), "FlappyBird", sf::Style::Titlebar | sf::Style::Close, sf::State::Windowed);
@@ -21,7 +20,7 @@ GameManager::GameManager()
 	this->gameScene.addObject(std::make_unique<Player>(sf::Vector2f(this->gameWindow.getSize().x / 3.0f, this->gameWindow.getSize().y / 2.0f)));
 
 	//init Pipe 
-	this->gameScene.addObject(std::make_unique<Pipe>(sf::Vector2f(this->gameWindow.getSize().x,400.f)));
+	this->gameScene.addObject(std::make_unique<Pipe>(sf::Vector2f(this->gameWindow.getSize().x,300.f), this->gameWindow.getSize().y));
 }
 
 GameManager::~GameManager()

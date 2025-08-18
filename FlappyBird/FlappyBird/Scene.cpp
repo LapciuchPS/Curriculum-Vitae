@@ -20,7 +20,7 @@ void Scene::removeObject(SceneInterface* object)
 
 void Scene::update(const float& deltaTime)
 {
-	for (auto& object : this->sceneObjects)
+	for (const auto& object : this->sceneObjects)
 		object->update(deltaTime);
 }
 
