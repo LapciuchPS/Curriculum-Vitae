@@ -1,19 +1,22 @@
 #include "stdafx.h"
 #include "InteractableObjects.h"
+#include "Configurations.h"
 
 //Pipe class
-PipeElement::PipeElement(const sf::Vector2f& pipePosition, objectID ID, const sf::Vector2f& pipeSize) :
-	MapObject(ID, pipePosition, pipeSize)
+PipeElement::PipeElement(const PipeConfiguration& pipeConfig, objectID ID) :
+	MapObject(ID, pipeConfig.pipeStartingPoint, pipeConfig.pipeSize),
+	pipeElementSpeed(pipeConfig.speed)
 {
-
 	//for testing
-	this->pipeElementSketch.setSize(pipeSize);
+	this->pipeElementSketch.setSize(pipeConfig.pipeSize);
 	this->pipeElementSketch.setFillColor(sf::Color::Yellow);
+	this->pipeElementSketch.setOutlineThickness(2);
+	this->pipeElementSketch.setOutlineColor(sf::Color::White);
 }
 
 void PipeElement::update(const float& deltaTime)
 {
-	MapObject::moveObject({ -this->pipeSpeed*deltaTime, 0.f });
+	MapObject::moveObject({ -this->pipeElementSpeed *deltaTime, 0.f });
 
 	//for testing
 	this->pipeElementSketch.setPosition(MapObject::getObjectPosition());
@@ -30,45 +33,58 @@ void PipeElement::drawPipe(sf::RenderTarget& target)
 	target.draw(this->pipeElementSketch);
 }
 
-Pipe::Pipe(const sf::Vector2f& holePosition, int windowSizeY)
+Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
 {
+	float holePosY = pipeConfig.gapPosition.y;
+
+	//to assure that the gap is fully on the screen
+	if (holePosY - pipeConfig.gapSizeY < 0)
+		holePosY += pipeConfig.gapSizeY;
+	else if (holePosY + pipeConfig.gapSizeY > windowSizeY)
+		holePosY -= pipeConfig.gapSizeY;
+
 	std::unique_ptr<PipeElement> pipeElementPointer;
-	float pipePositionY = holePosition.y;
+	float pipeHeight = pipeConfig.pipeSize.y;
+	float pipePositionY = holePosY;
 	bool pipeBeginning = true;
 
 	//upper pipe
-	while (pipePositionY - 100 > -100)
+	while (pipePositionY - pipeHeight > -pipeHeight)
 	{
-		pipePositionY -= 100;
+		pipePositionY -= pipeHeight;
+		pipeConfig.pipeStartingPoint.y = pipePositionY;
 
 		if (pipeBeginning)
 		{
-			pipeElementPointer = std::make_unique<PipeElement>(sf::Vector2f(holePosition.x, pipePositionY), objectID::pipeEndUp);
+			pipeElementPointer = std::make_unique<PipeElement>(pipeConfig, objectID::pipeEndUp);
 			pipeBeginning = false;
 		}
-		else pipeElementPointer = std::make_unique<PipeElement>(sf::Vector2f(holePosition.x, pipePositionY), objectID::pipeMiddle);
+		else pipeElementPointer = std::make_unique<PipeElement>(pipeConfig, objectID::pipeMiddle);
 		
 
 		this->pipe.push_back(std::move(pipeElementPointer));
 	}
 
-	pipePositionY = holePosition.y;
+	pipePositionY = holePosY + pipeConfig.gapSizeY;
 	pipeBeginning = true;
 
 	//lower pipe
-	while (pipePositionY + 100 < windowSizeY + 100)
+	do
 	{
-		pipePositionY += 100;
+		pipeConfig.pipeStartingPoint.y = pipePositionY;
 
 		if (pipeBeginning)
 		{
-			pipeElementPointer = std::make_unique<PipeElement>(sf::Vector2f(holePosition.x, pipePositionY), objectID::pipeEndDown);
+			pipeElementPointer = std::make_unique<PipeElement>(pipeConfig, objectID::pipeEndDown);
 			pipeBeginning = false;
 		}
-		else pipeElementPointer = std::make_unique<PipeElement>(sf::Vector2f(holePosition.x, pipePositionY), objectID::pipeMiddle);
+		else pipeElementPointer = std::make_unique<PipeElement>(pipeConfig, objectID::pipeMiddle);
 
 		this->pipe.push_back(std::move(pipeElementPointer));
-	}
+
+		pipePositionY += pipeHeight;
+	} while (pipePositionY + pipeHeight < windowSizeY + pipeHeight);
+
 }
 
 void Pipe::update(const float& deltaTime)

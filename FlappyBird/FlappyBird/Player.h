@@ -1,13 +1,15 @@
 #pragma once
 #include "MapObject.h"
 
+struct PlayerConfiguration;
+
 class Player: public MapObject
 {
 private:
 	//private variables
-
 	float jumpingSpeed;
 	float fallingSpeed;
+	float jumpDistance;
 	float jumpDistanceLeft;
 
 	//for testing
@@ -15,7 +17,7 @@ private:
 
 public:
 	//public functions
-	Player(const sf::Vector2f& playerPosition, const sf::Vector2f& playerSize = {50.f,50.f});
+	Player(const PlayerConfiguration& playerCFG);
 
 	void jump();
 	void update(const float& deltaTime) override;

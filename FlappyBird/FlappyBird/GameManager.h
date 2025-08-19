@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "Configurations.h"
 
 class GameManager
 {
@@ -7,8 +8,11 @@ private:
 	//private variables
 	sf::RenderWindow gameWindow;
 	std::optional<sf::Event> currentEvent;
-	sf::Clock gameClock;
+	sf::Clock deltaTimeClock, gameClock;
 	float deltaTime = 0;
+
+	//GameConfig
+	GameConfiguration gameConfig;
 
 	//Scenes
 	Scene gameScene;
@@ -21,12 +25,10 @@ public:
 	GameManager();
 	~GameManager();
 
-	
-	inline bool isRunning() const
-	{
-		return this->gameWindow.isOpen();
-	}
+	int rand_int(int low, int high);
+	bool isRunning() const;
 
+	void makeObstacles();
 	void updateGame();
 	void renderGame();
 };

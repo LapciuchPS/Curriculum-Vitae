@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Configurations.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="InteractableObjects.cpp" />
@@ -156,6 +157,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Configurations.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="MapObject.h" />
     <ClInclude Include="InteractableObjects.h" />

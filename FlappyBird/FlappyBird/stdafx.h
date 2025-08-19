@@ -1,7 +1,8 @@
 #pragma once
 
-//Standard library
+//Standard libraries
 #include<iostream>
+#include <random>
 
 //SFML
 #include <SFML/Window.hpp>

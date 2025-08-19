@@ -1,21 +1,22 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "ResourceManager.h"
+#include "Configurations.h"
 
-Player::Player(const sf::Vector2f& playerPosition, const sf::Vector2f& playerSize) :
-	MapObject(SceneInterface::objectID::player, playerPosition, playerSize),
-	jumpingSpeed(350.f), fallingSpeed(400.f), jumpDistanceLeft(0.f)
+Player::Player(const PlayerConfiguration& playerCFG) :
+	MapObject(SceneInterface::objectID::player, playerCFG.startingPoint, playerCFG.size),
+	jumpingSpeed(playerCFG.jumpingSpeed), fallingSpeed(playerCFG.fallingSpeed), jumpDistance(playerCFG.jumpDistance), jumpDistanceLeft(0.f)
 {
 	
 	//for testing
-	this->playerSketch.setPosition(playerPosition);
-	this->playerSketch.setSize(playerSize);
+	this->playerSketch.setPosition(playerCFG.startingPoint);
+	this->playerSketch.setSize(playerCFG.size);
 	this->playerSketch.setFillColor(sf::Color::Yellow);
 }
 
 void Player::jump()
 {
-	this->jumpDistanceLeft = 150.f;
+	this->jumpDistanceLeft = this->jumpDistance;
 }
 
 void Player::update(const float& deltaTime)

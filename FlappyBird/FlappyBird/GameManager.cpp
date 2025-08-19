@@ -3,10 +3,11 @@
 #include "Player.h"
 #include "InteractableObjects.h"
 
+
 //private functions
 void GameManager::initWindow()
 {
-	this->gameWindow = sf::RenderWindow(sf::VideoMode({ 1920, 1080 }), "FlappyBird", sf::Style::Titlebar | sf::Style::Close, sf::State::Windowed);
+	this->gameWindow = sf::RenderWindow(sf::VideoMode(this->gameConfig.getGameWindowSize()), "FlappyBird", sf::Style::Titlebar | sf::Style::Close, sf::State::Windowed);
 	this->gameWindow.setFramerateLimit(60);
 }
 
@@ -17,10 +18,10 @@ GameManager::GameManager()
 	this->initWindow();
 
 	//init Player
-	this->gameScene.addObject(std::make_unique<Player>(sf::Vector2f(this->gameWindow.getSize().x / 3.0f, this->gameWindow.getSize().y / 2.0f)));
+	this->gameScene.addObject(std::make_unique<Player>(this->gameConfig.getPlayerConfig()));
 
-	//init Pipe 
-	this->gameScene.addObject(std::make_unique<Pipe>(sf::Vector2f(this->gameWindow.getSize().x,300.f), this->gameWindow.getSize().y));
+	//init clock
+	this->gameClock.start();
 }
 
 GameManager::~GameManager()
@@ -28,10 +29,36 @@ GameManager::~GameManager()
 
 }
 
+int GameManager::rand_int(int low, int high)
+{
+	static std::default_random_engine re{ std::random_device{}() };
+
+	using Dist = std::uniform_int_distribution<int>;
+	static Dist uid{};
+	return uid(re, Dist::param_type{ low,high });
+}
+
+bool GameManager::isRunning() const
+{
+	return this->gameWindow.isOpen();
+}
+
+void GameManager::makeObstacles()
+{
+	//init Pipe 
+	if (this->rand_int(0, 1) && this->gameClock.getElapsedTime().asSeconds() >= 3.f)
+	{
+		this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, this->rand_int(0, this->gameWindow.getSize().y)));
+
+		this->gameScene.addObject(std::make_unique<Pipe>(this->gameConfig.getPipeConfig(), this->gameWindow.getSize().y));
+		this->gameClock.restart();
+	}
+}
+
 void GameManager::updateGame()
 {
 	//passed time since the last frame
-	this->deltaTime = this->gameClock.restart().asSeconds();
+	this->deltaTime = this->deltaTimeClock.restart().asSeconds();
 
 	while ((this->currentEvent = this->gameWindow.pollEvent()))
 	{
@@ -47,6 +74,8 @@ void GameManager::updateGame()
 		}
 	}
 
+	this->makeObstacles();
+	
 	this->gameScene.update(deltaTime);
 }
 
@@ -58,3 +87,5 @@ void GameManager::renderGame()
 
 	this->gameWindow.display();
 }
+
+
