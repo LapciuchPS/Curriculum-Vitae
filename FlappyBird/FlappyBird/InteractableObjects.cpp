@@ -3,34 +3,34 @@
 #include "Configurations.h"
 
 //Pipe class
-PipeElement::PipeElement(const PipeConfiguration& pipeConfig, objectID ID) :
-	MapObject(ID, pipeConfig.pipeStartingPoint, pipeConfig.pipeSize),
-	pipeElementSpeed(pipeConfig.speed)
+LinearMover::LinearMover(const sf::Vector2f& objectPosition, const sf::Vector2f& objectSize, float speed, objectID ID) :
+	MapObject(ID, objectPosition, objectSize),
+	linearMoverSpeed(speed)
 {
 	//for testing
-	this->pipeElementSketch.setSize(pipeConfig.pipeSize);
-	this->pipeElementSketch.setFillColor(sf::Color::Yellow);
-	this->pipeElementSketch.setOutlineThickness(2);
-	this->pipeElementSketch.setOutlineColor(sf::Color::White);
+	this->linearMoverSketch.setSize(objectSize);
+	this->linearMoverSketch.setFillColor(sf::Color::Yellow);
+	this->linearMoverSketch.setOutlineThickness(2);
+	this->linearMoverSketch.setOutlineColor(sf::Color::White);
 }
 
-void PipeElement::update(const float& deltaTime)
+void LinearMover::update(const float& deltaTime)
 {
-	MapObject::moveObject({ - this->pipeElementSpeed * deltaTime, 0.f });
+	MapObject::moveObject({ - this->linearMoverSpeed * deltaTime, 0.f });
 
 	//for testing
-	this->pipeElementSketch.setPosition(MapObject::getObjectPosition());
+	this->linearMoverSketch.setPosition(MapObject::getObjectPosition());
 }
 
-void PipeElement::draw(sf::RenderTarget& target)
+void LinearMover::draw(sf::RenderTarget& target)
 {
-	this->drawPipe(target);
+	this->drawLinearMover(target);
 }
 
 //for testing
-void PipeElement::drawPipe(sf::RenderTarget& target)
+void LinearMover::drawLinearMover(sf::RenderTarget& target)
 {
-	target.draw(this->pipeElementSketch);
+	target.draw(this->linearMoverSketch);
 }
 
 Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
@@ -43,7 +43,7 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
 	else if (holePosY + pipeConfig.gapSizeY > windowSizeY)
 		holePosY -= pipeConfig.gapSizeY;
 
-	std::unique_ptr<PipeElement> pipeElementPointer;
+	objectID newID = objectID::undefined;
 	float pipeHeight = pipeConfig.pipeSize.y;
 	float pipePositionY = holePosY;
 	bool pipeBeginning = true;
@@ -56,13 +56,12 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
 
 		if (pipeBeginning)
 		{
-			pipeElementPointer = std::make_unique<PipeElement>(pipeConfig, objectID::pipeEndUp);
+			newID = objectID::pipeEndUp;
 			pipeBeginning = false;
 		}
-		else pipeElementPointer = std::make_unique<PipeElement>(pipeConfig, objectID::pipeMiddle);
+		else newID = objectID::pipeMiddle;
 		
-
-		this->pipe.push_back(std::move(pipeElementPointer));
+		this->pipe.emplace_back(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.speed, newID);
 	}
 
 	pipePositionY = holePosY + pipeConfig.gapSizeY;
@@ -75,12 +74,13 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
 
 		if (pipeBeginning)
 		{
-			pipeElementPointer = std::make_unique<PipeElement>(pipeConfig, objectID::pipeEndDown);
+			newID = objectID::pipeEndDown;
 			pipeBeginning = false;
 		}
-		else pipeElementPointer = std::make_unique<PipeElement>(pipeConfig, objectID::pipeMiddle);
+		else newID = objectID::pipeMiddle;
 
-		this->pipe.push_back(std::move(pipeElementPointer));
+
+		this->pipe.emplace_back(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.speed, newID);
 
 		pipePositionY += pipeHeight;
 	} while (pipePositionY + pipeHeight < windowSizeY + pipeHeight);
@@ -89,40 +89,28 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
 
 void Pipe::update(const float& deltaTime)
 {
-	for (const auto& element : this->pipe)
-		element->update(deltaTime);
+	for (auto& element : this->pipe)
+		element.update(deltaTime);
 }
 
 void Pipe::draw(sf::RenderTarget& target)
 {
 	for (auto& element : this->pipe)
-		element->draw(target);
+		element.draw(target);
 }
 
 //Cloud
 Cloud::Cloud(const CloudConfiguration& cloudConfig, objectID ID) :
-	MapObject(ID,cloudConfig.cloudStartingPoint, cloudConfig.cloudSize),
-	cloudSpeed(cloudConfig.speed)
+	LinearMover(cloudConfig.cloudStartingPoint, cloudConfig.cloudSize, cloudConfig.speed, ID)
 {
-	//for testing
-	this->cloudSketch.setSize(cloudConfig.cloudSize);
-	this->cloudSketch.setFillColor(sf::Color::Yellow);
 }
 
 void Cloud::update(const float& deltaTime)
 {
-	MapObject::moveObject({ -this->cloudSpeed * deltaTime, 0.f });
-
-	//for testing
-	this->cloudSketch.setPosition(MapObject::getObjectPosition());
+	LinearMover::update(deltaTime);
 }
 
 void Cloud::draw(sf::RenderTarget& target)
 {
-	this->drawCloud(target);
-}
-
-void Cloud::drawCloud(sf::RenderTarget& target)
-{
-	target.draw(this->cloudSketch);
+	LinearMover::draw(target);
 }

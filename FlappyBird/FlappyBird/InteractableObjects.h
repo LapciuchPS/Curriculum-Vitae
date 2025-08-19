@@ -5,52 +5,44 @@ struct PipeConfiguration;
 struct CloudConfiguration;
 
 //Pipe
-class PipeElement : public MapObject
+class LinearMover : public MapObject
 {
 private:
-	float pipeElementSpeed;
+	float linearMoverSpeed;
 
 	//for testing
-	sf::RectangleShape pipeElementSketch;
+	sf::RectangleShape linearMoverSketch;
 
 public:
-	PipeElement(const PipeConfiguration& pipeConfig, objectID ID = objectID::pipeMiddle);
+	LinearMover(const sf::Vector2f& objectPosition, const sf::Vector2f& objectSize, float speed, objectID ID = objectID::pipeMiddle);
 
 	void update(const float& deltaTime) override;
 	void draw(sf::RenderTarget& target) override;
 
 	//for testing
-	void drawPipe(sf::RenderTarget& target);
+	void drawLinearMover(sf::RenderTarget& target);
 };
 
 class Pipe : public SceneInterface
 {
 private:
-	std::vector<std::unique_ptr<PipeElement>> pipe;
+	std::vector<LinearMover> pipe;
 
 public:
 	Pipe(PipeConfiguration pipeConfig, int windowSizeY);
 
 	void update(const float& deltaTime) override;
 	void draw(sf::RenderTarget& target) override;
-	//const objectID& getObjectID() const override;
 };
 
 //Cloud
-class Cloud : public MapObject
+class Cloud : public LinearMover
 {
 private:
-	float cloudSpeed;
-
-	//for testing
-	sf::RectangleShape cloudSketch;
 
 public:
 	Cloud(const CloudConfiguration& cloudConfig, objectID ID = objectID::cloud);
 
-	void update(const float& deltaTime) override;
-	void draw(sf::RenderTarget& target) override;
-
-	//for testing
-	void drawCloud(sf::RenderTarget& target);
+	void update(const float& deltaTime);
+	void draw(sf::RenderTarget& target);
 };
