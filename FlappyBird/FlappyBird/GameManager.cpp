@@ -46,11 +46,28 @@ bool GameManager::isRunning() const
 void GameManager::makeObstacles()
 {
 	//init Pipe 
-	if (this->rand_int(0, 1) && this->gameClock.getElapsedTime().asSeconds() >= 3.f)
+	if (this->gameClock.getElapsedTime().asSeconds() >= 3.f)
 	{
-		this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, this->rand_int(0, this->gameWindow.getSize().y)));
+		int randomPosY = this->rand_int(0, this->gameWindow.getSize().y);
 
-		this->gameScene.addObject(std::make_unique<Pipe>(this->gameConfig.getPipeConfig(), this->gameWindow.getSize().y));
+		switch (this->rand_int(0, 1))
+		{
+		case 0:
+		{
+			this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
+
+			this->gameScene.addObject(std::make_unique<Pipe>(this->gameConfig.getPipeConfig(), this->gameWindow.getSize().y));
+		}
+
+		case 1:
+		{
+			this->gameConfig.setCloudPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
+
+			this->gameScene.addObject(std::make_unique<Cloud>(this->gameConfig.getCloudConfig()));
+		}
+
+		}
+		
 		this->gameClock.restart();
 	}
 }

@@ -18,6 +18,13 @@ struct PipeConfiguration
 	float speed;
 };
 
+struct CloudConfiguration
+{
+	sf::Vector2f cloudSize;
+	sf::Vector2f cloudStartingPoint;
+	float speed;
+};
+
 class GameConfiguration
 {
 private:
@@ -30,8 +37,12 @@ private:
 	//pipe element
 	PipeConfiguration pipeConfig;
 
+	//cloud 
+	CloudConfiguration cloudConfig;
+
 	void initPlayerVariables();
 	void initPipeVariables();
+	void initCloudVariables();
 	void initVariables();
 
 public:
@@ -41,8 +52,10 @@ public:
 	const sf::Vector2u& getGameWindowSize() const;
 	const PlayerConfiguration& getPlayerConfig() const;
 	const PipeConfiguration& getPipeConfig() const;
+	const CloudConfiguration& getCloudConfig() const;
 
 	//setters
 	void setPipeGapPos(const sf::Vector2f& gapPos);
+	void setCloudPos(const sf::Vector2f& cloudPos);
 };
 

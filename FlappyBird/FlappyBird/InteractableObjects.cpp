@@ -16,7 +16,7 @@ PipeElement::PipeElement(const PipeConfiguration& pipeConfig, objectID ID) :
 
 void PipeElement::update(const float& deltaTime)
 {
-	MapObject::moveObject({ -this->pipeElementSpeed *deltaTime, 0.f });
+	MapObject::moveObject({ - this->pipeElementSpeed * deltaTime, 0.f });
 
 	//for testing
 	this->pipeElementSketch.setPosition(MapObject::getObjectPosition());
@@ -97,4 +97,32 @@ void Pipe::draw(sf::RenderTarget& target)
 {
 	for (auto& element : this->pipe)
 		element->draw(target);
+}
+
+//Cloud
+Cloud::Cloud(const CloudConfiguration& cloudConfig, objectID ID) :
+	MapObject(ID,cloudConfig.cloudStartingPoint, cloudConfig.cloudSize),
+	cloudSpeed(cloudConfig.speed)
+{
+	//for testing
+	this->cloudSketch.setSize(cloudConfig.cloudSize);
+	this->cloudSketch.setFillColor(sf::Color::Yellow);
+}
+
+void Cloud::update(const float& deltaTime)
+{
+	MapObject::moveObject({ -this->cloudSpeed * deltaTime, 0.f });
+
+	//for testing
+	this->cloudSketch.setPosition(MapObject::getObjectPosition());
+}
+
+void Cloud::draw(sf::RenderTarget& target)
+{
+	this->drawCloud(target);
+}
+
+void Cloud::drawCloud(sf::RenderTarget& target)
+{
+	target.draw(this->cloudSketch);
 }
