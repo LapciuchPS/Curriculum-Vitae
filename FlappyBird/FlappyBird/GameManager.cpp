@@ -57,6 +57,7 @@ void GameManager::makeObstacles()
 			this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
 
 			this->gameScene.addObject(std::make_unique<Pipe>(this->gameConfig.getPipeConfig(), this->gameWindow.getSize().y));
+			break;
 		}
 
 		case 1:
@@ -64,6 +65,7 @@ void GameManager::makeObstacles()
 			this->gameConfig.setCloudPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
 
 			this->gameScene.addObject(std::make_unique<Cloud>(this->gameConfig.getCloudConfig()));
+			break;
 		}
 
 		}

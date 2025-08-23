@@ -2,37 +2,7 @@
 #include "InteractableObjects.h"
 #include "Configurations.h"
 
-//Pipe class
-LinearMover::LinearMover(const sf::Vector2f& objectPosition, const sf::Vector2f& objectSize, float speed, objectID ID) :
-	MapObject(ID, objectPosition, objectSize),
-	linearMoverSpeed(speed)
-{
-	//for testing
-	this->linearMoverSketch.setSize(objectSize);
-	this->linearMoverSketch.setFillColor(sf::Color::Yellow);
-	this->linearMoverSketch.setOutlineThickness(2);
-	this->linearMoverSketch.setOutlineColor(sf::Color::White);
-}
-
-void LinearMover::update(const float& deltaTime)
-{
-	MapObject::moveObject({ - this->linearMoverSpeed * deltaTime, 0.f });
-
-	//for testing
-	this->linearMoverSketch.setPosition(MapObject::getObjectPosition());
-}
-
-void LinearMover::draw(sf::RenderTarget& target)
-{
-	this->drawLinearMover(target);
-}
-
-//for testing
-void LinearMover::drawLinearMover(sf::RenderTarget& target)
-{
-	target.draw(this->linearMoverSketch);
-}
-
+//Pipe
 Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
 {
 	float holePosY = pipeConfig.gapPosition.y;
@@ -61,7 +31,7 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
 		}
 		else newID = objectID::pipeMiddle;
 		
-		this->pipe.emplace_back(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.speed, newID);
+		this->pipe.emplace_back(std::make_unique<MapObject>(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.direction ,pipeConfig.speed, newID, std::make_unique<LinearMovement>()));
 	}
 
 	pipePositionY = holePosY + pipeConfig.gapSizeY;
@@ -80,37 +50,38 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
 		else newID = objectID::pipeMiddle;
 
 
-		this->pipe.emplace_back(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.speed, newID);
+		this->pipe.emplace_back(std::make_unique<MapObject>(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.direction, pipeConfig.speed, newID, std::make_unique<LinearMovement>()));
 
 		pipePositionY += pipeHeight;
 	} while (pipePositionY + pipeHeight < windowSizeY + pipeHeight);
 
 }
 
-void Pipe::update(const float& deltaTime)
+void Pipe::update(float deltaTime)
 {
 	for (auto& element : this->pipe)
-		element.update(deltaTime);
+		element->update(deltaTime);
 }
 
 void Pipe::draw(sf::RenderTarget& target)
 {
 	for (auto& element : this->pipe)
-		element.draw(target);
+		element->draw(target);
 }
 
 //Cloud
-Cloud::Cloud(const CloudConfiguration& cloudConfig, objectID ID) :
-	LinearMover(cloudConfig.cloudStartingPoint, cloudConfig.cloudSize, cloudConfig.speed, ID)
+Cloud::Cloud(const CloudConfiguration& cloudConfig):
+	MapObject(cloudConfig.cloudStartingPoint, cloudConfig.cloudSize, cloudConfig.direction, cloudConfig.speed, objectID::cloud, std::make_unique<LinearMovement>())
 {
 }
 
-void Cloud::update(const float& deltaTime)
+void Cloud::update(float deltaTime)
 {
-	LinearMover::update(deltaTime);
+	MapObject::update(deltaTime);
 }
 
 void Cloud::draw(sf::RenderTarget& target)
 {
-	LinearMover::draw(target);
+	MapObject::draw(target);
 }
+

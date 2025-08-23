@@ -10,7 +10,7 @@ protected:
 public:
 	~SceneInterface() = default;
 
-	virtual void update(const float& deltaTime) = 0;
+	virtual void update(float deltaTime) = 0;
 	virtual void draw(sf::RenderTarget& target) = 0;
 	inline virtual const objectID& getObjectID() const 
 	{
@@ -30,7 +30,7 @@ public:
 
 	void removeObject(SceneInterface* object);
 
-	void update(const float& deltaTime);
+	void update(float deltaTime) override;
 
 	void draw(sf::RenderTarget& target);
 

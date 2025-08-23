@@ -146,6 +146,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="InteractableObjects.cpp" />
+    <ClCompile Include="MovementBehaviour.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="MapObject.h" />
     <ClInclude Include="InteractableObjects.h" />
+    <ClInclude Include="MovementBehaviour.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />

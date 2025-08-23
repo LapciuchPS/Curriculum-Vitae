@@ -4,6 +4,7 @@ struct PlayerConfiguration
 {
 	sf::Vector2f size;
 	sf::Vector2f startingPoint;
+	sf::Vector2f direction;
 	float jumpingSpeed;
 	float fallingSpeed;
 	float jumpDistance;
@@ -11,17 +12,23 @@ struct PlayerConfiguration
 
 struct PipeConfiguration
 {
+	//pipe
 	sf::Vector2f pipeSize;
 	sf::Vector2f pipeStartingPoint;
+	sf::Vector2f direction;
+	float speed;
+
+	//gap
 	float gapSizeY;
 	sf::Vector2f gapPosition;
-	float speed;
+	
 };
 
 struct CloudConfiguration
 {
 	sf::Vector2f cloudSize;
 	sf::Vector2f cloudStartingPoint;
+	sf::Vector2f direction;
 	float speed;
 };
 

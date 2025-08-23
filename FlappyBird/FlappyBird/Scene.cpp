@@ -18,7 +18,7 @@ void Scene::removeObject(SceneInterface* object)
 	this->sceneObjects.erase(it, this->sceneObjects.end());
 }
 
-void Scene::update(const float& deltaTime)
+void Scene::update(float deltaTime)
 {
 	for (const auto& object : this->sceneObjects)
 		object->update(deltaTime);

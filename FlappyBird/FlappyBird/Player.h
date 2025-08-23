@@ -7,7 +7,6 @@ class Player: public MapObject
 {
 private:
 	//private variables
-	float jumpingSpeed;
 	float fallingSpeed;
 	float jumpDistance;
 	float jumpDistanceLeft;
@@ -17,10 +16,10 @@ private:
 
 public:
 	//public functions
-	Player(const PlayerConfiguration& playerCFG);
+	Player(const PlayerConfiguration& playerConfig);
 
 	void jump();
-	void update(const float& deltaTime) override;
+	void update(float deltaTime) override;
 	void draw(sf::RenderTarget& target);
 
 	//for testing

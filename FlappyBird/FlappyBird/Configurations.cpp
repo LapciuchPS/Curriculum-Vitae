@@ -11,16 +11,20 @@ void GameConfiguration::initPlayerVariables()
 	this->playerConfig.jumpingSpeed = this->gameWindowSize.y * 0.4f;
 	this->playerConfig.fallingSpeed = this->gameWindowSize.y * 0.55f;
 	this->playerConfig.jumpDistance = this->gameWindowSize.y * 0.16f;
+	this->playerConfig.direction = { 0.f, -1.f };
 }
 
 void GameConfiguration::initPipeVariables()
 {
+	//pipe
 	float pipeSideSize = this->gameWindowSize.y * 0.12f;
 
 	this->pipeConfig.pipeSize = sf::Vector2f({ pipeSideSize, pipeSideSize });
 	this->pipeConfig.speed = this->gameWindowSize.x * 0.15f;
 	this->pipeConfig.pipeStartingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y)});
+	this->pipeConfig.direction = { -1.0, 0.f };
 
+	//gap
 	this->pipeConfig.gapSizeY = this->gameWindowSize.y * 0.28f;
 	this->pipeConfig.gapPosition = { 0,0 };
 }
@@ -30,6 +34,7 @@ void GameConfiguration::initCloudVariables()
 	this->cloudConfig.cloudSize = sf::Vector2f(this->gameWindowSize.x * 0.25f, this->gameWindowSize.y * 0.15f);
 	this->cloudConfig.cloudStartingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y) });
 	this->cloudConfig.speed = this->gameWindowSize.x * 0.08f;
+	this->cloudConfig.direction = { -1.0, 0.f };
 }
 
 void GameConfiguration::initVariables()

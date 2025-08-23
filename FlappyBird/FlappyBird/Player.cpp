@@ -3,14 +3,14 @@
 #include "ResourceManager.h"
 #include "Configurations.h"
 
-Player::Player(const PlayerConfiguration& playerCFG) :
-	MapObject(SceneInterface::objectID::player, playerCFG.startingPoint, playerCFG.size),
-	jumpingSpeed(playerCFG.jumpingSpeed), fallingSpeed(playerCFG.fallingSpeed), jumpDistance(playerCFG.jumpDistance), jumpDistanceLeft(0.f)
+Player::Player(const PlayerConfiguration& playerConfig) :
+	MapObject(playerConfig.startingPoint, playerConfig.size, playerConfig.direction, playerConfig.jumpingSpeed, SceneInterface::objectID::player, std::make_unique<LinearMovement>(), true),
+	fallingSpeed(playerConfig.fallingSpeed), jumpDistance(playerConfig.jumpDistance), jumpDistanceLeft(0.f)
 {
 	
 	//for testing
-	this->playerSketch.setPosition(playerCFG.startingPoint);
-	this->playerSketch.setSize(playerCFG.size);
+	this->playerSketch.setPosition(playerConfig.startingPoint);
+	this->playerSketch.setSize(playerConfig.size);
 	this->playerSketch.setFillColor(sf::Color::Yellow);
 }
 
@@ -19,14 +19,14 @@ void Player::jump()
 	this->jumpDistanceLeft = this->jumpDistance;
 }
 
-void Player::update(const float& deltaTime)
+void Player::update(float deltaTime)
 {
 
 	if (this->jumpDistanceLeft > 0.f)
 	{
-		float move = this->jumpingSpeed * deltaTime;
+		float move = MapObject::getObjectSpeed() * deltaTime;
 		this->jumpDistanceLeft -= move;
-		MapObject::moveObject({ 0.f, -move });
+		MapObject::update(deltaTime);
 	}
 	else MapObject::moveObject({ 0.f, this->fallingSpeed * deltaTime });
 
