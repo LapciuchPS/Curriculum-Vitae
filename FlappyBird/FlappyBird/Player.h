@@ -1,9 +1,10 @@
 #pragma once
 #include "MapObject.h"
+#include "EventHandler.h"
 
 struct PlayerConfiguration;
 
-class Player: public MapObject
+class Player: public MapObject, public EventObserver
 {
 private:
 	//private variables
@@ -21,6 +22,8 @@ public:
 	void jump();
 	void update(float deltaTime) override;
 	void draw(sf::RenderTarget& target);
+
+	void onNotify(const Event& event) override;
 
 	//for testing
 	void drawPlayer(sf::RenderTarget& target);

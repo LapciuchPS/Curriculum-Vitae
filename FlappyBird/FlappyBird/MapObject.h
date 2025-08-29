@@ -11,6 +11,7 @@ private:
 	objectID ID;
 	float speed;
 	bool isOnScreen;
+	bool isAlive;
 	std::unique_ptr<MovementBehaviour> movementStrategy;
 
 protected:
@@ -26,11 +27,18 @@ protected:
 		this->objectHitbox.size = newSize;
 	}
 
+	inline void setIsAlive(bool truthValue)
+	{
+		this->isAlive = truthValue;
+	}
+
 public:
 	//public functions
-	inline MapObject(const sf::Vector2f& position = { 0.f,0.f }, const sf::Vector2f& size = sf::Vector2f({ 0.f,0.f }), const sf::Vector2f& moveDirection = { 0,0 }, float speed = 0.f,  const objectID ID = objectID::undefined, std::unique_ptr<MovementBehaviour> movementStrategy = nullptr, bool isOnScreen = false)
+	inline MapObject(const sf::Vector2f& position = { 0.f,0.f }, const sf::Vector2f& size = sf::Vector2f({ 0.f,0.f }), const sf::Vector2f& moveDirection = { 0,0 }, float speed = 0.f,  const objectID ID = objectID::undefined, std::unique_ptr<MovementBehaviour> movementStrategy = nullptr, bool isOnScreen = false, bool isAlive = true)
 		: objectHitbox(position, size), moveDirection(moveDirection), speed(speed), isOnScreen(isOnScreen), ID(ID), movementStrategy(std::move(movementStrategy))
 	{ }
+
+	virtual ~MapObject() = default;
 
 	inline bool checkCollision(const sf::FloatRect& otherHitbox)
 	{
@@ -72,7 +80,7 @@ public:
 		return this->objectHitbox;
 	}
 
-	inline const objectID& getObjectID() const override
+	inline const objectID getObjectID() const override
 	{
 		return this->ID;
 	}
@@ -82,9 +90,14 @@ public:
 		return this->moveDirection;
 	}
 
-	inline const float getObjectSpeed() const
+	inline float getObjectSpeed() const
 	{
 		return this->speed;
+	}
+
+	inline bool isObjectOnScreen() const
+	{
+		return this->isOnScreen;
 	}
 };
 

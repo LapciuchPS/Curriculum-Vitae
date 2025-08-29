@@ -1,6 +1,7 @@
 #pragma once
 
 class Player;
+class Pipe;
 
 class SceneInterface
 {
@@ -12,7 +13,7 @@ public:
 
 	virtual void update(float deltaTime) = 0;
 	virtual void draw(sf::RenderTarget& target) = 0;
-	inline virtual const objectID& getObjectID() const 
+	inline virtual const objectID getObjectID() const 
 	{
 		return objectID::undefined;
 	}
@@ -27,13 +28,12 @@ public:
 	Scene() = default;
 
 	void addObject(std::unique_ptr<SceneInterface> object);
-
 	void removeObject(SceneInterface* object);
-
 	void update(float deltaTime) override;
-
 	void draw(sf::RenderTarget& target);
 
+	//gettes
 	Player* getPlayer() const;
+	std::vector<Pipe*> getPipes() const;
 
 };

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Scene.h"
 #include "Player.h"
+#include "InteractableObjects.h"
 
 void Scene::addObject(std::unique_ptr<SceneInterface> object)
 {
@@ -37,6 +38,18 @@ Player* Scene::getPlayer() const
 			return dynamic_cast<Player*>(object.get());
 
 	return nullptr;
+}
+
+std::vector<Pipe*> Scene::getPipes() const
+{
+	std::vector<Pipe*> pipes;
+
+	for (const auto& object : this->sceneObjects)
+		if (auto* pipe = dynamic_cast<Pipe*>(object.get()))
+			pipes.push_back(pipe);
+			
+	return pipes;
+		
 }
 
 

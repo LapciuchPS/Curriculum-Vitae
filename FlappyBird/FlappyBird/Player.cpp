@@ -7,7 +7,6 @@ Player::Player(const PlayerConfiguration& playerConfig) :
 	MapObject(playerConfig.startingPoint, playerConfig.size, playerConfig.direction, playerConfig.jumpingSpeed, SceneInterface::objectID::player, std::make_unique<LinearMovement>(), true),
 	fallingSpeed(playerConfig.fallingSpeed), jumpDistance(playerConfig.jumpDistance), jumpDistanceLeft(0.f)
 {
-	
 	//for testing
 	this->playerSketch.setPosition(playerConfig.startingPoint);
 	this->playerSketch.setSize(playerConfig.size);
@@ -37,6 +36,12 @@ void Player::update(float deltaTime)
 void Player::draw(sf::RenderTarget& target)
 {
 	this->drawPlayer(target);
+}
+
+void Player::onNotify(const Event& event)
+{
+	if (event.getEventType() == Event::EventType::pipeCollision || event.getEventType() == Event::EventType::screenCollision)
+		this->setIsAlive(false);
 }
 
 //for testing

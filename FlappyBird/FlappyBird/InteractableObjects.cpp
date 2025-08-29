@@ -3,7 +3,8 @@
 #include "Configurations.h"
 
 //Pipe
-Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY)
+Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
+	isAlive(isAlive)
 {
 	float holePosY = pipeConfig.gapPosition.y;
 
@@ -67,6 +68,22 @@ void Pipe::draw(sf::RenderTarget& target)
 {
 	for (auto& element : this->pipe)
 		element->draw(target);
+}
+
+void Pipe::onNotify(const Event& event)
+{
+	if (event.getEventType() == Event::EventType::outOfScreen && event.getFirst() == this)
+		this->isAlive = false;
+}
+
+const std::vector<std::unique_ptr<MapObject>>& Pipe::getPipeElements() const
+{
+	return this->pipe;
+}
+
+bool Pipe::isOnScreen() const
+{
+	return this->pipe.front()->isObjectOnScreen();
 }
 
 //Cloud
