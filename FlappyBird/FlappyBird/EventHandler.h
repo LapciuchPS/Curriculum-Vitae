@@ -32,19 +32,20 @@ public:
 };
 
 //Subject
-class WorldObserver
+class EventHandler
 {
 private:
 	Scene* currentScene;
 	std::vector<EventObserver*> observers;
 
-
-public:
-	WorldObserver(Scene* currentScene);
-	void addObserver(EventObserver* observer);
-	void removeObserver(EventObserver* observer);
 	void checkPlayerCollision(const sf::Vector2u& windowSize);
 	void checkPipesVisibility();
+
+public:
+	EventHandler(Scene* currentScene);
+	void addObserver(EventObserver* observer);
+	void removeObserver(EventObserver* observer);
+
 	void update(const sf::Vector2u& windowSize);
 
 protected:

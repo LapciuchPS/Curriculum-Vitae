@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "Configurations.h"
+#include "EventHandler.h"
 
 class GameManager
 {
@@ -11,11 +12,16 @@ private:
 	sf::Clock deltaTimeClock, gameClock;
 	float deltaTime = 0;
 
+	enum class ObjectName {player, pipe, cloud};
+
 	//GameConfig
 	GameConfiguration gameConfig;
 
 	//Scenes
 	Scene gameScene;
+
+	//EventHandler
+	EventHandler  eventHandler;
 
 	//private functions
 	void initWindow();
@@ -28,6 +34,7 @@ public:
 	int rand_int(int low, int high);
 	bool isRunning() const;
 
+	void makeObject(ObjectName name);
 	void makeObstacles();
 	void updateGame();
 	void renderGame();

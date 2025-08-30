@@ -14,7 +14,6 @@ private:
 
 public:
 	Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive = true);
-	~Pipe() = default;
 
 	void update(float deltaTime);
 	void draw(sf::RenderTarget& target);
@@ -23,7 +22,8 @@ public:
 
 	//getters
 	const std::vector<std::unique_ptr<MapObject>>& getPipeElements() const;
-	bool isOnScreen() const;
+	bool getIsOnScreen() const;
+	bool getIsAlive() const override;
 
 };
 

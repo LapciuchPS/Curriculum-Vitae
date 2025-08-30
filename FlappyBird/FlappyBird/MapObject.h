@@ -34,8 +34,8 @@ protected:
 
 public:
 	//public functions
-	inline MapObject(const sf::Vector2f& position = { 0.f,0.f }, const sf::Vector2f& size = sf::Vector2f({ 0.f,0.f }), const sf::Vector2f& moveDirection = { 0,0 }, float speed = 0.f,  const objectID ID = objectID::undefined, std::unique_ptr<MovementBehaviour> movementStrategy = nullptr, bool isOnScreen = false, bool isAlive = true)
-		: objectHitbox(position, size), moveDirection(moveDirection), speed(speed), isOnScreen(isOnScreen), ID(ID), movementStrategy(std::move(movementStrategy))
+	inline MapObject(const sf::Vector2f& position = { 0.f,0.f }, const sf::Vector2f& size = sf::Vector2f({ 0.f,0.f }), const sf::Vector2f& moveDirection = { 0,0 }, float speed = 0.f,  const objectID ID = objectID::undefined, std::unique_ptr<MovementBehaviour> movementStrategy = nullptr, bool isOnScreen = true, bool isAlive = true)
+		: objectHitbox(position, size), moveDirection(moveDirection), speed(speed), isOnScreen(isOnScreen), ID(ID), movementStrategy(std::move(movementStrategy)), isAlive(isAlive)
 	{ }
 
 	virtual ~MapObject() = default;
@@ -98,6 +98,11 @@ public:
 	inline bool isObjectOnScreen() const
 	{
 		return this->isOnScreen;
+	}
+
+	inline bool getIsAlive() const override
+	{
+		return this->isAlive;
 	}
 };
 

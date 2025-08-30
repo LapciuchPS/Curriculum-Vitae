@@ -13,12 +13,13 @@ void GameManager::initWindow()
 
 //public functions
 
-GameManager::GameManager()
+GameManager::GameManager():
+	eventHandler(&gameScene)
 {
 	this->initWindow();
 
 	//init Player
-	this->gameScene.addObject(std::make_unique<Player>(this->gameConfig.getPlayerConfig()));
+	this->makeObject(ObjectName::player);
 
 	//init clock
 	this->gameClock.start();
@@ -43,30 +44,45 @@ bool GameManager::isRunning() const
 	return this->gameWindow.isOpen();
 }
 
+void GameManager::makeObject(ObjectName name)
+{
+	std::unique_ptr<SceneInterface> newObject;
+	int randomPosY = this->rand_int(0, this->gameWindow.getSize().y);
+
+	switch (name)
+	{
+	case ObjectName::player:
+		newObject = std::make_unique<Player>(this->gameConfig.getPlayerConfig());
+		break;
+
+	case ObjectName::pipe:
+		this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
+		newObject = std::make_unique<Pipe>(this->gameConfig.getPipeConfig(), this->gameWindow.getSize().y);
+		break;
+	case ObjectName::cloud:
+		this->gameConfig.setCloudPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
+		newObject = std::make_unique<Cloud>(this->gameConfig.getCloudConfig());
+		break;
+	}
+
+	if (EventObserver* ptr = dynamic_cast<EventObserver*>(newObject.get()))
+		this->eventHandler.addObserver(ptr);
+
+	this->gameScene.addObject(std::move(newObject));
+}
+
 void GameManager::makeObstacles()
 {
 	//init Pipe 
 	if (this->gameClock.getElapsedTime().asSeconds() >= 3.f)
 	{
-		int randomPosY = this->rand_int(0, this->gameWindow.getSize().y);
+		//this->makeObject(ObjectName::pipe);
 
 		switch (this->rand_int(0, 1))
 		{
-		case 0:
-		{
-			this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
+		case 0: this->makeObject(ObjectName::pipe); break;
 
-			this->gameScene.addObject(std::make_unique<Pipe>(this->gameConfig.getPipeConfig(), this->gameWindow.getSize().y));
-			break;
-		}
-
-		case 1:
-		{
-			this->gameConfig.setCloudPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
-
-			this->gameScene.addObject(std::make_unique<Cloud>(this->gameConfig.getCloudConfig()));
-			break;
-		}
+		case 1: this->makeObject(ObjectName::cloud); break;
 
 		}
 		
@@ -94,8 +110,11 @@ void GameManager::updateGame()
 	}
 
 	this->makeObstacles();
-	
+
+	this->gameScene.clearDeadObject(this->eventHandler);
 	this->gameScene.update(deltaTime);
+
+	this->eventHandler.update(this->gameWindow.getSize());
 }
 
 void GameManager::renderGame()

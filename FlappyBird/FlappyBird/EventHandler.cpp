@@ -27,18 +27,18 @@ SceneInterface* Event::getSecond() const
 	return this->obj2;
 }
 
-//WorldObserver class
-WorldObserver::WorldObserver(Scene* currentScene) :
+//EventHandler class
+EventHandler::EventHandler(Scene* currentScene) :
 	currentScene(currentScene)
 {
 }
 
-void WorldObserver::addObserver(EventObserver* observer)
+void EventHandler::addObserver(EventObserver* observer)
 {
 	this->observers.push_back(observer);
 }
 
-void WorldObserver::removeObserver(EventObserver* const observer)
+void EventHandler::removeObserver(EventObserver* const observer)
 {
 	auto condition = [&observer](EventObserver* observerInVector)
 		{
@@ -48,7 +48,7 @@ void WorldObserver::removeObserver(EventObserver* const observer)
 	this->observers.erase(std::remove_if(this->observers.begin(), this->observers.end(), condition), this->observers.end());
 }
 
-void WorldObserver::checkPlayerCollision(const sf::Vector2u& windowSize)
+void EventHandler::checkPlayerCollision(const sf::Vector2u& windowSize)
 {
 	//player is already dead
 	if (this->currentScene->getPlayer() == nullptr) return;
@@ -66,26 +66,30 @@ void WorldObserver::checkPlayerCollision(const sf::Vector2u& windowSize)
 		this->notify(Event(Type::screenCollision));
 }
 
-void WorldObserver::checkPipesVisibility()
+void EventHandler::checkPipesVisibility()
 {
 	for (auto& pipe : this->currentScene->getPipes())
-		if (pipe->isOnScreen())
+	{
+		if (pipe->getIsOnScreen())
 		{
 			sf::FloatRect element = pipe->getPipeElements().front()->getObjectHitbox();
 
 			if (element.position.x + element.size.x < 0.f)
 				this->notify(Event(Type::outOfScreen, pipe));
+
+			//std::cout << "Pipe pointer: " << pipe << std::endl;
 		}
+	}
 
 }
 
-void WorldObserver::update(const sf::Vector2u& windowSize)
+void EventHandler::update(const sf::Vector2u& windowSize)
 {
 	this->checkPlayerCollision(windowSize);
 	this->checkPipesVisibility();
 }
 
-void WorldObserver::notify(const Event& event)
+void EventHandler::notify(const Event& event)
 {
 	for (EventObserver* const observer : this->observers)
 		observer->onNotify(event);

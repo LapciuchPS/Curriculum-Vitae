@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Player.h"
 #include "InteractableObjects.h"
+#include "EventHandler.h"
 
 void Scene::addObject(std::unique_ptr<SceneInterface> object)
 {
@@ -17,6 +18,25 @@ void Scene::removeObject(SceneInterface* object)
 
 	auto it = std::remove_if(this->sceneObjects.begin(), this->sceneObjects.end(), condition);
 	this->sceneObjects.erase(it, this->sceneObjects.end());
+}
+
+void Scene::clearDeadObject(EventHandler& eventHandler)
+{
+	auto condition = [&eventHandler](const std::unique_ptr<SceneInterface>& object)
+		{
+			if (!object->getIsAlive())
+			{
+				//remove observer
+				if (EventObserver* ptr = dynamic_cast<EventObserver*>(object.get()))
+					eventHandler.removeObserver(ptr);
+
+				return true;
+			}
+			
+			return false;
+		};
+
+	this->sceneObjects.erase(std::remove_if(this->sceneObjects.begin(), this->sceneObjects.end(), condition), this->sceneObjects.end());
 }
 
 void Scene::update(float deltaTime)
@@ -46,7 +66,10 @@ std::vector<Pipe*> Scene::getPipes() const
 
 	for (const auto& object : this->sceneObjects)
 		if (auto* pipe = dynamic_cast<Pipe*>(object.get()))
+		{
 			pipes.push_back(pipe);
+		}
+			
 			
 	return pipes;
 		

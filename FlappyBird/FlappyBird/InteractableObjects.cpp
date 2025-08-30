@@ -81,9 +81,14 @@ const std::vector<std::unique_ptr<MapObject>>& Pipe::getPipeElements() const
 	return this->pipe;
 }
 
-bool Pipe::isOnScreen() const
+bool Pipe::getIsOnScreen() const
 {
 	return this->pipe.front()->isObjectOnScreen();
+}
+
+bool Pipe::getIsAlive() const
+{
+	return this->isAlive;
 }
 
 //Cloud
