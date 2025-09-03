@@ -37,8 +37,8 @@ public:
 
 	void addObject(std::unique_ptr<SceneInterface> object);
 	void removeObject(SceneInterface* object);
-
 	void clearDeadObject(EventHandler& eventHandler);
+	void clearWholeScene();
 	void update(float deltaTime) override;
 	void draw(sf::RenderTarget& target);
 

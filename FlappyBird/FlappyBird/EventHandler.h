@@ -43,9 +43,10 @@ private:
 
 public:
 	EventHandler(Scene* currentScene);
+
 	void addObserver(EventObserver* observer);
 	void removeObserver(EventObserver* observer);
-
+	void removeAllObservers();
 	void update(const sf::Vector2u& windowSize);
 
 protected:

@@ -24,18 +24,21 @@ private:
 	EventHandler  eventHandler;
 
 	//private functions
+	int rand_int(int low, int high);
+	void makeObject(ObjectName name);
+	void makeObstacles();
 	void initWindow();
+	void startGame();
 
 public:
 	//public functions
 	GameManager();
 	~GameManager();
 
-	int rand_int(int low, int high);
+
 	bool isRunning() const;
 
-	void makeObject(ObjectName name);
-	void makeObstacles();
+
 	void updateGame();
 	void renderGame();
 };

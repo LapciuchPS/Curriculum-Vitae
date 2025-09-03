@@ -5,31 +5,6 @@
 
 
 //private functions
-void GameManager::initWindow()
-{
-	this->gameWindow = sf::RenderWindow(sf::VideoMode(this->gameConfig.getGameWindowSize()), "FlappyBird", sf::Style::Titlebar | sf::Style::Close, sf::State::Windowed);
-	this->gameWindow.setFramerateLimit(60);
-}
-
-//public functions
-
-GameManager::GameManager():
-	eventHandler(&gameScene)
-{
-	this->initWindow();
-
-	//init Player
-	this->makeObject(ObjectName::player);
-
-	//init clock
-	this->gameClock.start();
-}
-
-GameManager::~GameManager()
-{
-
-}
-
 int GameManager::rand_int(int low, int high)
 {
 	static std::default_random_engine re{ std::random_device{}() };
@@ -37,11 +12,6 @@ int GameManager::rand_int(int low, int high)
 	using Dist = std::uniform_int_distribution<int>;
 	static Dist uid{};
 	return uid(re, Dist::param_type{ low,high });
-}
-
-bool GameManager::isRunning() const
-{
-	return this->gameWindow.isOpen();
 }
 
 void GameManager::makeObject(ObjectName name)
@@ -59,6 +29,7 @@ void GameManager::makeObject(ObjectName name)
 		this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
 		newObject = std::make_unique<Pipe>(this->gameConfig.getPipeConfig(), this->gameWindow.getSize().y);
 		break;
+
 	case ObjectName::cloud:
 		this->gameConfig.setCloudPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
 		newObject = std::make_unique<Cloud>(this->gameConfig.getCloudConfig());
@@ -76,22 +47,66 @@ void GameManager::makeObstacles()
 	//init Pipe 
 	if (this->gameClock.getElapsedTime().asSeconds() >= 3.f)
 	{
-		//this->makeObject(ObjectName::pipe);
+		this->makeObject(ObjectName::pipe);
 
 		switch (this->rand_int(0, 1))
 		{
-		case 0: this->makeObject(ObjectName::pipe); break;
+		case 0: //this->makeObject(ObjectName::pipe); break;
 
 		case 1: this->makeObject(ObjectName::cloud); break;
 
 		}
-		
+
 		this->gameClock.restart();
 	}
 }
 
+void GameManager::initWindow()
+{
+	this->gameWindow = sf::RenderWindow(sf::VideoMode(this->gameConfig.getGameWindowSize()), "FlappyBird", sf::Style::Titlebar | sf::Style::Close, sf::State::Windowed);
+	this->gameWindow.setFramerateLimit(144);
+}
+
+void GameManager::startGame()
+{
+	//init Player
+	this->makeObject(ObjectName::player);
+
+	//init clock
+	this->gameClock.start();
+}
+
+//public functions
+GameManager::GameManager():
+	eventHandler(&gameScene)
+{
+	this->initWindow();
+	this->startGame();
+}
+
+GameManager::~GameManager()
+{
+
+}
+
+bool GameManager::isRunning() const
+{
+	return this->gameWindow.isOpen();
+}
+
 void GameManager::updateGame()
 {
+	//if the player is dead, restart the game
+	if (!this->gameScene.getPlayer()->getIsAlive())
+	{
+		this->eventHandler.removeAllObservers();
+		this->gameScene.clearWholeScene();
+		this->gameClock.reset();
+
+		this->startGame();
+	}
+
+
 	//passed time since the last frame
 	this->deltaTime = this->deltaTimeClock.restart().asSeconds();
 

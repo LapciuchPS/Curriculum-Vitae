@@ -48,6 +48,11 @@ void EventHandler::removeObserver(EventObserver* const observer)
 	this->observers.erase(std::remove_if(this->observers.begin(), this->observers.end(), condition), this->observers.end());
 }
 
+void EventHandler::removeAllObservers()
+{
+	this->observers.clear();
+}
+
 void EventHandler::checkPlayerCollision(const sf::Vector2u& windowSize)
 {
 	//player is already dead
@@ -76,8 +81,6 @@ void EventHandler::checkPipesVisibility()
 
 			if (element.position.x + element.size.x < 0.f)
 				this->notify(Event(Type::outOfScreen, pipe));
-
-			//std::cout << "Pipe pointer: " << pipe << std::endl;
 		}
 	}
 

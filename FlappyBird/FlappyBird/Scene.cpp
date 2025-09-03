@@ -39,6 +39,11 @@ void Scene::clearDeadObject(EventHandler& eventHandler)
 	this->sceneObjects.erase(std::remove_if(this->sceneObjects.begin(), this->sceneObjects.end(), condition), this->sceneObjects.end());
 }
 
+void Scene::clearWholeScene()
+{
+	this->sceneObjects.clear();
+}
+
 void Scene::update(float deltaTime)
 {
 	for (const auto& object : this->sceneObjects)
