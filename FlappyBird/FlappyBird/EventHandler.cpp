@@ -61,7 +61,7 @@ void EventHandler::checkPlayerCollision(const sf::Vector2u& windowSize)
 	sf::FloatRect playerHitbox = this->currentScene->getPlayer()->getObjectHitbox();
 
 	//collision with pipes
-	for (const auto& pipe : this->currentScene->getPipes())
+	for (const auto& pipe : this->currentScene->getAll<Pipe>())
 		for (const auto& pipeElement : pipe->getPipeElements())
 			if (pipeElement->checkCollision(playerHitbox))
 				this->notify(Event(Type::pipeCollision));
@@ -73,7 +73,8 @@ void EventHandler::checkPlayerCollision(const sf::Vector2u& windowSize)
 
 void EventHandler::checkPipesVisibility()
 {
-	for (auto& pipe : this->currentScene->getPipes())
+	//pipes
+	for (auto& pipe : this->currentScene->getAll<Pipe>())
 	{
 		if (pipe->getIsOnScreen())
 		{
@@ -84,6 +85,9 @@ void EventHandler::checkPipesVisibility()
 		}
 	}
 
+	//clouds
+	for (auto& cloud : this->currentScene->getAll<Cloud>())
+		std::cout << cloud->getObjectSpeed() << std::endl;
 }
 
 void EventHandler::update(const sf::Vector2u& windowSize)

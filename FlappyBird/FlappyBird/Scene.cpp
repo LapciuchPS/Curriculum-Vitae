@@ -65,20 +65,3 @@ Player* Scene::getPlayer() const
 	return nullptr;
 }
 
-std::vector<Pipe*> Scene::getPipes() const
-{
-	std::vector<Pipe*> pipes;
-
-	for (const auto& object : this->sceneObjects)
-		if (auto* pipe = dynamic_cast<Pipe*>(object.get()))
-		{
-			pipes.push_back(pipe);
-		}
-			
-			
-	return pipes;
-		
-}
-
-
-

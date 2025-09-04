@@ -2,6 +2,7 @@
 
 class Player;
 class Pipe;
+class Cloud;
 class EventHandler;
 
 class SceneInterface
@@ -44,6 +45,20 @@ public:
 
 	//gettes
 	Player* getPlayer() const;
-	std::vector<Pipe*> getPipes() const;
+
+	template<typename T>
+	inline std::vector<T*> getAll() const
+	{
+		std::vector<T*> wantedObjects;
+
+		for (auto& object : this->sceneObjects)
+			if (T* ptr = dynamic_cast<T*>(object.get()))
+			{
+				wantedObjects.push_back(ptr);
+			}
+
+		return wantedObjects;
+	}
+
 
 };
