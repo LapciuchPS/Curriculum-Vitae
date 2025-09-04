@@ -39,7 +39,9 @@ private:
 	std::vector<EventObserver*> observers;
 
 	void checkPlayerCollision(const sf::Vector2u& windowSize);
-	void checkPipesVisibility();
+
+	template<typename T>
+	void checkVisibility();
 
 public:
 	EventHandler(Scene* currentScene);

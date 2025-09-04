@@ -21,14 +21,15 @@ public:
 	void onNotify(const Event& event) override;
 
 	//getters
-	const std::vector<std::unique_ptr<MapObject>>& getPipeElements() const;
+	const std::vector<std::unique_ptr<MapObject>>& getPipeParts() const;
+	const sf::FloatRect& getObjectHitbox() const;
 	bool getIsOnScreen() const;
 	bool getIsAlive() const override;
 
 };
 
 //Cloud
-class Cloud : public MapObject
+class Cloud : public MapObject, public EventObserver
 {
 private:
 
@@ -37,4 +38,6 @@ public:
 
 	void update(float deltaTime);
 	void draw(sf::RenderTarget& target);
+
+	void onNotify(const Event& event) override;
 };

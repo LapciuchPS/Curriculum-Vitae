@@ -76,14 +76,19 @@ void Pipe::onNotify(const Event& event)
 		this->isAlive = false;
 }
 
-const std::vector<std::unique_ptr<MapObject>>& Pipe::getPipeElements() const
+const std::vector<std::unique_ptr<MapObject>>& Pipe::getPipeParts() const
 {
 	return this->pipe;
 }
 
+const sf::FloatRect& Pipe::getObjectHitbox() const
+{
+	return this->pipe.front()->getObjectHitbox();
+}
+
 bool Pipe::getIsOnScreen() const
 {
-	return this->pipe.front()->isObjectOnScreen();
+	return this->pipe.front()->getIsOnScreen();
 }
 
 bool Pipe::getIsAlive() const
@@ -105,5 +110,11 @@ void Cloud::update(float deltaTime)
 void Cloud::draw(sf::RenderTarget& target)
 {
 	MapObject::draw(target);
+}
+
+void Cloud::onNotify(const Event& event)
+{
+	if (event.getEventType() == Event::EventType::outOfScreen && event.getFirst() == this)
+		this->setIsAlive(false);
 }
 

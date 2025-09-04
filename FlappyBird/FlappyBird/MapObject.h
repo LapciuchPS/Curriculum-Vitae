@@ -95,7 +95,7 @@ public:
 		return this->speed;
 	}
 
-	inline bool isObjectOnScreen() const
+	inline bool getIsOnScreen() const
 	{
 		return this->isOnScreen;
 	}
