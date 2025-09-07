@@ -31,7 +31,12 @@ void GameConfiguration::initPipeVariables()
 
 void GameConfiguration::initCloudVariables()
 {
-	this->cloudConfig.cloudSize = sf::Vector2f(this->gameWindowSize.x * 0.25f, this->gameWindowSize.y * 0.15f);
+	//Texture proportion: x - 55px, y - 25px
+
+	float cloudSideX = this->gameWindowSize.x * 0.27f;
+	float cloudSideY = cloudSideX * 25/55;
+
+	this->cloudConfig.cloudSize = sf::Vector2f(cloudSideX, cloudSideY);
 	this->cloudConfig.cloudStartingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y) });
 	this->cloudConfig.speed = this->gameWindowSize.x * 0.08f;
 	this->cloudConfig.direction = { -1.0, 0.f };
@@ -49,12 +54,14 @@ void GameConfiguration::initVariables()
 	this->initCloudVariables();
 }
 
+//public functions
 GameConfiguration::GameConfiguration(const sf::Vector2u& windowSize) :
 	gameWindowSize(windowSize)
 {
 	this->initVariables();
 }
 
+//getters
 const sf::Vector2u& GameConfiguration::getGameWindowSize() const
 {
 	return this->gameWindowSize;

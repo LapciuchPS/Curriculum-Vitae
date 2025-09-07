@@ -17,7 +17,7 @@ int GameManager::rand_int(int low, int high)
 void GameManager::makeObject(ObjectName name)
 {
 	std::unique_ptr<SceneInterface> newObject;
-	int randomPosY = this->rand_int(0, this->gameWindow.getSize().y);
+	int randomPosY = 0;
 
 	switch (name)
 	{
@@ -26,11 +26,15 @@ void GameManager::makeObject(ObjectName name)
 		break;
 
 	case ObjectName::pipe:
+		randomPosY = this->rand_int(0, this->gameWindow.getSize().y);
+
 		this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
 		newObject = std::make_unique<Pipe>(this->gameConfig.getPipeConfig(), this->gameWindow.getSize().y);
 		break;
 
 	case ObjectName::cloud:
+		randomPosY = this->rand_int(0, this->gameWindow.getSize().y - this->gameConfig.getCloudConfig().cloudSize.y/2);
+
 		this->gameConfig.setCloudPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
 		newObject = std::make_unique<Cloud>(this->gameConfig.getCloudConfig());
 		break;
@@ -44,12 +48,13 @@ void GameManager::makeObject(ObjectName name)
 
 void GameManager::makeObstacles()
 {
-	//init Pipe 
+	
 	if (this->gameClock.getElapsedTime().asSeconds() >= 3.f)
 	{
+		//init Pipe 
 		this->makeObject(ObjectName::pipe);
 
-		switch (this->rand_int(0, 1))
+		switch (this->rand_int(0, 3))
 		{
 		case 0: //this->makeObject(ObjectName::pipe); break;
 
@@ -72,7 +77,7 @@ void GameManager::startGame()
 	//init Player
 	this->makeObject(ObjectName::player);
 
-	//init clock
+	//start clock
 	this->gameClock.start();
 }
 
@@ -134,7 +139,7 @@ void GameManager::updateGame()
 
 void GameManager::renderGame()
 {
-	this->gameWindow.clear();
+	this->gameWindow.clear(sf::Color::Cyan);
 
 	this->gameScene.draw(this->gameWindow);
 

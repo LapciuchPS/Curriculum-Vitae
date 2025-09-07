@@ -13,6 +13,7 @@ private:
 	bool isOnScreen;
 	bool isAlive;
 	std::unique_ptr<MovementBehaviour> movementStrategy;
+	std::optional<sf::Sprite> objectSprite;
 
 protected:
 	//protected functions
@@ -40,6 +41,23 @@ public:
 
 	virtual ~MapObject() = default;
 
+	inline void initObjectSprite(const sf::Texture& texture)
+	{
+		this->objectSprite.emplace(texture);
+
+		float scaleX = this->objectHitbox.size.x / texture.getSize().x;
+		float scaleY = this->objectHitbox.size.y / texture.getSize().y;
+
+		this->objectSprite->setScale({ scaleX, scaleY });
+	}
+
+	inline void rotateSprite(float degrees)
+	{
+		this->objectSprite->setOrigin(this->objectSprite->getLocalBounds().size / 2.f);
+		this->objectSprite->setRotation(sf::degrees(degrees));
+		this->objectSprite->setOrigin(this->objectSprite->getLocalBounds().size);
+	}
+
 	inline bool checkCollision(const sf::FloatRect& otherHitbox)
 	{
 		return this->objectHitbox.findIntersection(otherHitbox).has_value();
@@ -52,16 +70,27 @@ public:
 
 	inline void draw(sf::RenderTarget& target) override
 	{
+		//for testing
 		sf::RectangleShape sketch(this->objectHitbox.size);
+		sketch.setFillColor(sf::Color::Yellow);
+		sketch.setOutlineColor(sf::Color::Black);
+		sketch.setOutlineThickness(1);
 		sketch.setPosition(this->objectHitbox.position);
+		if (this->getObjectID() != SceneInterface::objectID::cloud && this->getObjectID() != SceneInterface::objectID::pipeEndUp &&
+			this->getObjectID() != SceneInterface::objectID::pipeEndDown && this->getObjectID() != SceneInterface::objectID::pipeMiddle)
+			target.draw(sketch);
 
-		target.draw(sketch);
+		if (this->objectSprite.has_value())
+			target.draw(this->objectSprite.value());
 	}
 
 	inline void update(float deltaTime) override
 	{
 		if (this->movementStrategy)
 			this->movementStrategy->move(*this, deltaTime);
+
+		if (this->objectSprite.has_value())
+			this->objectSprite->setPosition(this->objectHitbox.position);
 	}
 
 	//getters

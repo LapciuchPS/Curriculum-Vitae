@@ -52,8 +52,18 @@ void Scene::update(float deltaTime)
 
 void Scene::draw(sf::RenderTarget& target)
 {
+	std::vector<SceneInterface*> clouds;
+
 	for (const auto& object : this->sceneObjects)
-		object->draw(target);
+	{
+		if (Cloud* ptr = dynamic_cast<Cloud*>(object.get()))
+			clouds.emplace_back(ptr);
+		else object->draw(target);
+	}
+
+	for (auto* ptr : clouds)
+		ptr->draw(target);
+		
 }
 
 Player* Scene::getPlayer() const

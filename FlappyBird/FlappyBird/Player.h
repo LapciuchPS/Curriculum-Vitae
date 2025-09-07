@@ -12,9 +12,6 @@ private:
 	float jumpDistance;
 	float jumpDistanceLeft;
 
-	//for testing
-	sf::RectangleShape playerSketch;
-
 public:
 	//public functions
 	Player(const PlayerConfiguration& playerConfig);
@@ -24,8 +21,5 @@ public:
 	void draw(sf::RenderTarget& target);
 
 	void onNotify(const Event& event) override;
-
-	//for testing
-	void drawPlayer(sf::RenderTarget& target);
 };
 

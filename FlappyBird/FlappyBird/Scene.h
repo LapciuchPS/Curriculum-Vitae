@@ -1,8 +1,6 @@
 #pragma once
 
 class Player;
-class Pipe;
-class Cloud;
 class EventHandler;
 
 class SceneInterface

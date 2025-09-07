@@ -1,8 +1,29 @@
 #include "stdafx.h"
 #include "InteractableObjects.h"
 #include "Configurations.h"
+#include "ResourceManager.h"
+
+using Texture = ResourceManager::TextureID;
 
 //Pipe
+void Pipe::initSprite(objectID id)
+{
+	switch (id)
+	{
+	case objectID::pipeMiddle: this->pipe.back()->initObjectSprite(ResourceManager::get().getTexture(Texture::pipeMiddle)); break;
+
+	case objectID::pipeEndDown: this->pipe.back()->initObjectSprite(ResourceManager::get().getTexture(Texture::pipeEnd)); break;
+
+	case objectID::pipeEndUp:
+		this->pipe.back()->initObjectSprite(ResourceManager::get().getTexture(Texture::pipeEnd));
+		this->pipe.back()->rotateSprite(180.f);
+		break;
+
+	default:;
+
+	}
+}
+
 Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 	isAlive(isAlive)
 {
@@ -33,6 +54,7 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 		else newID = objectID::pipeMiddle;
 		
 		this->pipe.emplace_back(std::make_unique<MapObject>(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.direction ,pipeConfig.speed, newID, std::make_unique<LinearMovement>()));
+		this->initSprite(this->pipe.back()->getObjectID());
 	}
 
 	pipePositionY = holePosY + pipeConfig.gapSizeY;
@@ -52,6 +74,7 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 
 
 		this->pipe.emplace_back(std::make_unique<MapObject>(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.direction, pipeConfig.speed, newID, std::make_unique<LinearMovement>()));
+		this->initSprite(this->pipe.back()->getObjectID());
 
 		pipePositionY += pipeHeight;
 	} while (pipePositionY + pipeHeight < windowSizeY + pipeHeight);
@@ -100,6 +123,7 @@ bool Pipe::getIsAlive() const
 Cloud::Cloud(const CloudConfiguration& cloudConfig):
 	MapObject(cloudConfig.cloudStartingPoint, cloudConfig.cloudSize, cloudConfig.direction, cloudConfig.speed, objectID::cloud, std::make_unique<LinearMovement>())
 {
+	this->initObjectSprite(ResourceManager::get().getTexture(Texture::cloud));
 }
 
 void Cloud::update(float deltaTime)

@@ -12,6 +12,8 @@ private:
 	std::vector<std::unique_ptr<MapObject>> pipe;
 	bool isAlive;
 
+	void initSprite(objectID id);
+
 public:
 	Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive = true);
 
