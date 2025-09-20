@@ -16,7 +16,7 @@ void Pipe::initSprite(objectID id)
 
 	case objectID::pipeEndUp:
 		this->pipe.back()->initObjectSprite(ResourceManager::get().getTexture(Texture::pipeEnd));
-		this->pipe.back()->rotateSprite(180.f);
+		this->pipe.back()->getObjectSprite().rotate(sf::degrees(180.f));
 		break;
 
 	default:;
@@ -30,9 +30,7 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 	float holePosY = pipeConfig.gapPosition.y;
 
 	//to assure that the gap is fully on the screen
-	if (holePosY - pipeConfig.gapSizeY < 0)
-		holePosY += pipeConfig.gapSizeY;
-	else if (holePosY + pipeConfig.gapSizeY > windowSizeY)
+	if (holePosY + pipeConfig.gapSizeY > windowSizeY)
 		holePosY -= pipeConfig.gapSizeY;
 
 	objectID newID = objectID::undefined;

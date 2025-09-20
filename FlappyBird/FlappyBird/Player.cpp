@@ -4,31 +4,48 @@
 #include "Configurations.h"
 
 Player::Player(const PlayerConfiguration& playerConfig) :
-	MapObject(playerConfig.startingPoint, playerConfig.size, playerConfig.direction, playerConfig.jumpingSpeed, SceneInterface::objectID::player, std::make_unique<LinearMovement>(), true),
-	fallingSpeed(playerConfig.fallingSpeed), jumpDistance(playerConfig.jumpDistance), jumpDistanceLeft(0.f)
+	MapObject(playerConfig.startingPoint, playerConfig.size, playerConfig.direction, playerConfig.velocityY, SceneInterface::objectID::player, std::make_unique<LinearMovement>()),
+	frameSize(playerConfig.frameSize), velocityY(playerConfig.velocityY), gravity(playerConfig.gravity), jumpForce(playerConfig.jumpForce)
 {
-
+	MapObject::initObjectSprite(ResourceManager::get().getTexture(ResourceManager::TextureID::player), this->frameSize, playerConfig.frameScale);
 }
 
 void Player::jump()
 {
-	this->jumpDistanceLeft = this->jumpDistance;
+	this->velocityY = -this->jumpForce;
 }
 
 void Player::update(float deltaTime)
 {
+	//calculationg speed
+	this->velocityY += this->gravity * deltaTime;
+	MapObject::setMoveDirection({ 0.f, this->velocityY >= 0.f ? 1.f : -1.f });
+	MapObject::setObjectSpeed(std::abs(this->velocityY));
 
-	if (this->jumpDistanceLeft > 0.f)
+	MapObject::update(deltaTime);
+
+	//calculating sprite frame
+	this->animationTimer += deltaTime;
+	
+	if(this->velocityY >= 0.f)
+		this->currentFrame = 0;
+	else if (this->animationTimer >= this->animationSpeed)
 	{
-		float move = MapObject::getObjectSpeed() * deltaTime;
-		this->jumpDistanceLeft -= move;
-		MapObject::update(deltaTime);
+		this->animationTimer = 0.f;
+
+		if (++this->currentFrame > 3)
+			this->currentFrame = 0;
 	}
-	else MapObject::moveObject({ 0.f, this->fallingSpeed * deltaTime });
+
+	//calculating sprite angle
+	float currentRotation = std::clamp(this->velocityY * 0.05f, -30.f, 90.f);
+	MapObject::getObjectSprite().setRotation(sf::degrees(currentRotation));
+
 }
 
 void Player::draw(sf::RenderTarget& target)
 {
+	MapObject::setSpriteFrame({ currentFrame * this->frameSize.x, 0 }, this->frameSize);
 	MapObject::draw(target);
 }
 

@@ -4,13 +4,15 @@
 //Game Config
 void GameConfiguration::initPlayerVariables()
 {
-	float playerSideSize = this->gameWindowSize.y * 0.05f;
+	float playerSideSize = this->gameWindowSize.y * 0.07f;
 
 	this->playerConfig.size = sf::Vector2f({ playerSideSize, playerSideSize });
 	this->playerConfig.startingPoint = sf::Vector2f({ this->gameWindowSize.x * 0.3f, this->gameWindowSize.y * 0.5f });
-	this->playerConfig.jumpingSpeed = this->gameWindowSize.y * 0.4f;
-	this->playerConfig.fallingSpeed = this->gameWindowSize.y * 0.55f;
-	this->playerConfig.jumpDistance = this->gameWindowSize.y * 0.16f;
+	this->playerConfig.frameScale = { 2.3f, 2.3f };
+	this->playerConfig.frameSize = sf::Vector2i({ 64,64 });
+	this->playerConfig.velocityY = 0.f;
+	this->playerConfig.gravity = 2000.f;
+	this->playerConfig.jumpForce = 700.f;
 	this->playerConfig.direction = { 0.f, -1.f };
 }
 
@@ -25,7 +27,7 @@ void GameConfiguration::initPipeVariables()
 	this->pipeConfig.direction = { -1.0, 0.f };
 
 	//gap
-	this->pipeConfig.gapSizeY = this->gameWindowSize.y * 0.28f;
+	this->pipeConfig.gapSizeY = this->gameWindowSize.y * 0.23f;
 	this->pipeConfig.gapPosition = { 0,0 };
 }
 

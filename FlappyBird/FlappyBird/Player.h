@@ -8,9 +8,14 @@ class Player: public MapObject, public EventObserver
 {
 private:
 	//private variables
-	float fallingSpeed;
-	float jumpDistance;
-	float jumpDistanceLeft;
+	float velocityY;
+	float gravity;
+	float jumpForce;
+
+	float animationTimer = 0.f;
+	float animationSpeed = 0.15f;
+	int currentFrame = 0;
+	sf::Vector2i frameSize;
 
 public:
 	//public functions

@@ -18,6 +18,11 @@ private:
 protected:
 	//protected functions
 	//setters
+	inline void setObjectSpeed(float newSpeed)
+	{
+		this->speed = newSpeed;
+	}
+
 	inline void setObjectPosition(const sf::Vector2f& newPosition)
 	{
 		this->objectHitbox.position = newPosition;
@@ -28,9 +33,20 @@ protected:
 		this->objectHitbox.size = newSize;
 	}
 
+	inline void setMoveDirection(const sf::Vector2f& direction)
+	{
+		this->moveDirection = direction;
+	}
+
 	inline void setIsAlive(bool truthValue)
 	{
 		this->isAlive = truthValue;
+	}
+
+	inline void setSpriteFrame(sf::Vector2i textureStartingPoint, sf::Vector2i frameSize)
+	{
+		if(this->objectSprite.has_value())
+			this->objectSprite->setTextureRect({ textureStartingPoint, frameSize });
 	}
 
 public:
@@ -41,21 +57,20 @@ public:
 
 	virtual ~MapObject() = default;
 
-	inline void initObjectSprite(const sf::Texture& texture)
+	inline void initObjectSprite(const sf::Texture& texture, sf::Vector2i frameSize = { 0,0 }, sf::Vector2f spriteScale = { 1.f, 1.f })
 	{
 		this->objectSprite.emplace(texture);
 
-		float scaleX = this->objectHitbox.size.x / texture.getSize().x;
-		float scaleY = this->objectHitbox.size.y / texture.getSize().y;
+		//it means that a texture isn't a spritesheet so it can be easly rescaled
+		if (frameSize == sf::Vector2i({ 0,0 }))
+			frameSize = { static_cast<int>(texture.getSize().x), static_cast<int>(texture.getSize().y) };
 
+		float scaleX = (this->objectHitbox.size.x / frameSize.x) * spriteScale.x;
+		float scaleY = (this->objectHitbox.size.y / frameSize.y) * spriteScale.y;
+
+		this->objectSprite->setOrigin({frameSize.x / 2.f, frameSize.y / 2.f});
 		this->objectSprite->setScale({ scaleX, scaleY });
-	}
-
-	inline void rotateSprite(float degrees)
-	{
-		this->objectSprite->setOrigin(this->objectSprite->getLocalBounds().size / 2.f);
-		this->objectSprite->setRotation(sf::degrees(degrees));
-		this->objectSprite->setOrigin(this->objectSprite->getLocalBounds().size);
+		this->objectSprite->setTextureRect({ {0,0}, frameSize });
 	}
 
 	inline bool checkCollision(const sf::FloatRect& otherHitbox)
@@ -71,26 +86,25 @@ public:
 	inline void draw(sf::RenderTarget& target) override
 	{
 		//for testing
-		sf::RectangleShape sketch(this->objectHitbox.size);
+		/*sf::RectangleShape sketch(this->objectHitbox.size);
 		sketch.setFillColor(sf::Color::Yellow);
 		sketch.setOutlineColor(sf::Color::Black);
 		sketch.setOutlineThickness(1);
 		sketch.setPosition(this->objectHitbox.position);
-		if (this->getObjectID() != SceneInterface::objectID::cloud && this->getObjectID() != SceneInterface::objectID::pipeEndUp &&
-			this->getObjectID() != SceneInterface::objectID::pipeEndDown && this->getObjectID() != SceneInterface::objectID::pipeMiddle)
-			target.draw(sketch);
+		if (this->getObjectID() == SceneInterface::objectID::player)
+			target.draw(sketch);*/
 
 		if (this->objectSprite.has_value())
+		{
+			this->objectSprite->setPosition(this->objectHitbox.position + this->objectHitbox.size / 2.f);
 			target.draw(this->objectSprite.value());
+		}		
 	}
 
 	inline void update(float deltaTime) override
 	{
 		if (this->movementStrategy)
 			this->movementStrategy->move(*this, deltaTime);
-
-		if (this->objectSprite.has_value())
-			this->objectSprite->setPosition(this->objectHitbox.position);
 	}
 
 	//getters
@@ -122,6 +136,12 @@ public:
 	inline float getObjectSpeed() const
 	{
 		return this->speed;
+	}
+
+	inline sf::Sprite& getObjectSprite()
+	{
+		if (this->objectSprite.has_value())
+			return *this->objectSprite;
 	}
 
 	inline bool getIsOnScreen() const

@@ -3,10 +3,13 @@
 
 void ResourceManager::initPlayerSpriteSheet()
 {
-	/*if (!this->playerSpriteSheet.loadFromFile())
+	sf::Texture texture;
+	if (!texture.loadFromFile("Textures/bird_sprite_sheet.png"))
 	{
 		std::cerr << "Error::ResourceMenager::initPlayerSpriteSheet::Couldn't load the player sprite sheet!";
-	}*/
+	}
+
+	this->textures[TextureID::player] = texture;
 }
 
 void ResourceManager::initCloudTexture()

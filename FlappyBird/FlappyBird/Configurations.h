@@ -5,9 +5,11 @@ struct PlayerConfiguration
 	sf::Vector2f size;
 	sf::Vector2f startingPoint;
 	sf::Vector2f direction;
-	float jumpingSpeed;
-	float fallingSpeed;
-	float jumpDistance;
+	sf::Vector2f frameScale;
+	sf::Vector2i frameSize;
+	float velocityY;
+	float gravity;
+	float jumpForce;
 };
 
 struct PipeConfiguration

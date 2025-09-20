@@ -10,7 +10,9 @@ class Pipe : public SceneInterface, public EventObserver
 {
 private:
 	std::vector<std::unique_ptr<MapObject>> pipe;
+	std::optional<MapObject> gap;
 	bool isAlive;
+	bool visitedByBird;
 
 	void initSprite(objectID id);
 
