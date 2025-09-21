@@ -1,49 +1,34 @@
 #include "stdafx.h"
 #include "ResourceManager.h"
 
-void ResourceManager::initPlayerSpriteSheet()
-{
-	sf::Texture texture;
-	if (!texture.loadFromFile("Textures/bird_sprite_sheet.png"))
-	{
-		std::cerr << "Error::ResourceMenager::initPlayerSpriteSheet::Couldn't load the player sprite sheet!";
-	}
 
-	this->textures[TextureID::player] = texture;
+std::string ResourceManager::convertToStringTextureID(TextureID id)
+{
+	switch (id)
+	{
+		case TextureID::player: return "bird_sprite_sheet.png"; break;
+		case TextureID::pipeMiddle: return "pipe_middle.png"; break;
+		case TextureID::pipeEnd: return "pipe_end.png"; break;
+		case TextureID::cloud: return "cloud.png"; break;
+
+		//added exception!
+		default:"Unknown textureID";
+	}
 }
 
-void ResourceManager::initCloudTexture()
+void ResourceManager::initTexture(TextureID id)
 {
 	sf::Texture texture;
 
-	if (!texture.loadFromFile("Textures/cloud.png"))
+	std::string fileName = "Textures/" + this->convertToStringTextureID(id);
+	std::cout << fileName << std::endl;
+
+	if (!texture.loadFromFile(fileName))
 	{
-		std::cerr << "Error::ResourceManager::initCloudTexture: Couldn't load the cloud texture!\n";
+		std::cerr << "Error::ResourceManager::initCloudTexture: Couldn't load the " + fileName <<"!"<< std::endl;
 	}
 
-	this->textures[TextureID::cloud] = texture;
-}
-
-void ResourceManager::initPipeMiddleTexture()
-{
-	sf::Texture texture;
-	if (!texture.loadFromFile("Textures/pipe_middle.png"))
-	{
-		std::cerr << "Error::ResourceManager::initCloudTexture: Couldn't load the pipeMiddle texture!\n";
-	}
-
-	this->textures[TextureID::pipeMiddle] = texture;
-}
-
-void ResourceManager::initPipeEndTexture()
-{
-	sf::Texture texture;
-	if (!texture.loadFromFile("Textures/pipe_end.png"))
-	{
-		std::cerr << "Error::ResourceManager::initCloudTexture: Couldn't load the pipeEnd texture!\n";
-	}
-
-	this->textures[TextureID::pipeEnd] = texture;
+	this->textures[id] = texture;
 }
 
 const sf::Texture& ResourceManager::getTexture(TextureID id) const

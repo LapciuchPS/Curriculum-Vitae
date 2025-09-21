@@ -91,7 +91,7 @@ public:
 		sketch.setOutlineColor(sf::Color::Black);
 		sketch.setOutlineThickness(1);
 		sketch.setPosition(this->objectHitbox.position);
-		if (this->getObjectID() == SceneInterface::objectID::player)
+		if (this->getObjectID() == SceneInterface::objectID::undefined)
 			target.draw(sketch);*/
 
 		if (this->objectSprite.has_value())

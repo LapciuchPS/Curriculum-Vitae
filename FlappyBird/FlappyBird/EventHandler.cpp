@@ -53,7 +53,7 @@ void EventHandler::removeAllObservers()
 	this->observers.clear();
 }
 
-void EventHandler::checkPlayerCollision(const sf::Vector2u& windowSize)
+void EventHandler::checkPlayer(const sf::Vector2u& windowSize)
 {
 	//player is already dead
 	if (this->currentScene->getPlayer() == nullptr) return;
@@ -62,9 +62,21 @@ void EventHandler::checkPlayerCollision(const sf::Vector2u& windowSize)
 
 	//collision with pipes
 	for (const auto& pipe : this->currentScene->getAll<Pipe>())
+	{
+		//pipe parts
 		for (const auto& pipeElement : pipe->getPipeParts())
 			if (pipeElement->checkCollision(playerHitbox))
 				this->notify(Event(Type::pipeCollision));
+
+		//gap
+		if (pipe->getGap()->checkCollision(playerHitbox))
+			this->notify(Event(Type::birdInGap));
+
+		//gap passed so add a point to the score
+		else if (pipe->getVisitedByBird())
+			//increase the score
+			;
+	}
 
 	//collision with screen edges
 	if (playerHitbox.position.y <= 0 || playerHitbox.position.y + playerHitbox.size.y >= windowSize.y)
@@ -74,7 +86,6 @@ void EventHandler::checkPlayerCollision(const sf::Vector2u& windowSize)
 template<typename T>
 void EventHandler::checkVisibility()
 {
-	//pipes
 	for (auto& object : this->currentScene->getAll<T>())
 	{
 		if (object->getIsOnScreen())
@@ -89,7 +100,7 @@ void EventHandler::checkVisibility()
 
 void EventHandler::update(const sf::Vector2u& windowSize)
 {
-	this->checkPlayerCollision(windowSize);
+	this->checkPlayer(windowSize);
 	this->checkVisibility<Pipe>();
 	this->checkVisibility<Cloud>();
 }

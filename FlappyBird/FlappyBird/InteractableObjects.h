@@ -10,7 +10,7 @@ class Pipe : public SceneInterface, public EventObserver
 {
 private:
 	std::vector<std::unique_ptr<MapObject>> pipe;
-	std::optional<MapObject> gap;
+	std::unique_ptr<MapObject> gap;
 	bool isAlive;
 	bool visitedByBird;
 
@@ -27,8 +27,10 @@ public:
 	//getters
 	const std::vector<std::unique_ptr<MapObject>>& getPipeParts() const;
 	const sf::FloatRect& getObjectHitbox() const;
+	MapObject* const getGap() const;
 	bool getIsOnScreen() const;
 	bool getIsAlive() const override;
+	bool getVisitedByBird() const;
 
 };
 

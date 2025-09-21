@@ -10,17 +10,16 @@ private:
 	std::unordered_map<TextureID, sf::Texture> textures;
 	
 	//private functions
-	void initPlayerSpriteSheet();
-	void initCloudTexture();
-	void initPipeMiddleTexture();
-	void initPipeEndTexture();
+	std::string convertToStringTextureID(TextureID id);
+ 
+	void initTexture(TextureID id);
 
 	inline ResourceManager()
 	{
-		this->initPlayerSpriteSheet();
-		this->initCloudTexture();
-		this->initPipeMiddleTexture();
-		this->initPipeEndTexture();
+		this->initTexture(TextureID::player);
+		this->initTexture(TextureID::cloud);
+		this->initTexture(TextureID::pipeMiddle);
+		this->initTexture(TextureID::pipeEnd);
 	}
 	ResourceManager(const ResourceManager&) = delete;
 	ResourceManager& operator=(const ResourceManager&) = delete;
@@ -37,4 +36,5 @@ public:
 	const sf::Texture& getTexture(TextureID id) const;
 
 };
+
 

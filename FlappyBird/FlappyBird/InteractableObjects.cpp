@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 
 using Texture = ResourceManager::TextureID;
+using Type = Event::EventType;
 
 //Pipe
 void Pipe::initSprite(objectID id)
@@ -25,13 +26,15 @@ void Pipe::initSprite(objectID id)
 }
 
 Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
-	isAlive(isAlive)
+	visitedByBird(false), isAlive(isAlive)
 {
 	float holePosY = pipeConfig.gapPosition.y;
 
 	//to assure that the gap is fully on the screen
 	if (holePosY + pipeConfig.gapSizeY > windowSizeY)
 		holePosY -= pipeConfig.gapSizeY;
+
+	this->gap = std::make_unique<MapObject>(sf::Vector2f(pipeConfig.gapPosition.x, holePosY), sf::Vector2f(pipeConfig.pipeSize.x , pipeConfig.gapSizeY), pipeConfig.direction, pipeConfig.speed, objectID::undefined, std::make_unique<LinearMovement>());
 
 	objectID newID = objectID::undefined;
 	float pipeHeight = pipeConfig.pipeSize.y;
@@ -83,6 +86,8 @@ void Pipe::update(float deltaTime)
 {
 	for (auto& element : this->pipe)
 		element->update(deltaTime);
+
+	this->gap->update(deltaTime);
 }
 
 void Pipe::draw(sf::RenderTarget& target)
@@ -93,8 +98,14 @@ void Pipe::draw(sf::RenderTarget& target)
 
 void Pipe::onNotify(const Event& event)
 {
-	if (event.getEventType() == Event::EventType::outOfScreen && event.getFirst() == this)
-		this->isAlive = false;
+	if (event.getFirst() == this)
+	{
+		if (event.getEventType() == Type::outOfScreen)
+			this->isAlive = false;
+
+		if (event.getEventType() == Type::birdInGap)
+			this->visitedByBird = true;
+	}
 }
 
 const std::vector<std::unique_ptr<MapObject>>& Pipe::getPipeParts() const
@@ -107,6 +118,11 @@ const sf::FloatRect& Pipe::getObjectHitbox() const
 	return this->pipe.front()->getObjectHitbox();
 }
 
+MapObject* const Pipe::getGap() const
+{
+	return this->gap.get();
+}
+
 bool Pipe::getIsOnScreen() const
 {
 	return this->pipe.front()->getIsOnScreen();
@@ -115,6 +131,11 @@ bool Pipe::getIsOnScreen() const
 bool Pipe::getIsAlive() const
 {
 	return this->isAlive;
+}
+
+bool Pipe::getVisitedByBird() const
+{
+	return this->visitedByBird;
 }
 
 //Cloud
@@ -136,7 +157,7 @@ void Cloud::draw(sf::RenderTarget& target)
 
 void Cloud::onNotify(const Event& event)
 {
-	if (event.getEventType() == Event::EventType::outOfScreen && event.getFirst() == this)
+	if (event.getEventType() == Type::outOfScreen && event.getFirst() == this)
 		this->setIsAlive(false);
 }
 

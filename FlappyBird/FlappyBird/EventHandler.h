@@ -6,7 +6,7 @@ class Scene;
 class Event
 {
 public:
-	enum class EventType {screenCollision, pipeCollision, outOfScreen };
+	enum class EventType {screenCollision, pipeCollision, outOfScreen, birdInGap };
 
 private:
 	EventType type;
@@ -38,7 +38,7 @@ private:
 	Scene* currentScene;
 	std::vector<EventObserver*> observers;
 
-	void checkPlayerCollision(const sf::Vector2u& windowSize);
+	void checkPlayer(const sf::Vector2u& windowSize);
 
 	template<typename T>
 	void checkVisibility();
