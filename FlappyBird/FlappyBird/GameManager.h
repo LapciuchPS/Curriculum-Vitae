@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Configurations.h"
 #include "EventHandler.h"
+#include "ScoreSystem.h"
 
 class GameManager
 {
@@ -21,7 +22,10 @@ private:
 	Scene gameScene;
 
 	//EventHandler
-	EventHandler  eventHandler;
+	EventHandler eventHandler;
+
+	//ScoreSystem
+	std::optional<ScoreSystem> score;
 
 	//private functions
 	int rand_int(int low, int high);

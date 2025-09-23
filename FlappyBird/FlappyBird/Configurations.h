@@ -34,6 +34,13 @@ struct CloudConfiguration
 	float speed;
 };
 
+struct ScoreConfiguration
+{
+	unsigned int characterSize;
+	sf::Color outlineColor;
+	sf::Vector2f position;
+};
+
 class GameConfiguration
 {
 private:
@@ -49,9 +56,13 @@ private:
 	//cloud 
 	CloudConfiguration cloudConfig;
 
+	//score
+	ScoreConfiguration scoreConfig;
+
 	void initPlayerVariables();
 	void initPipeVariables();
 	void initCloudVariables();
+	void initScoreVariables();
 	void initVariables();
 
 public:
@@ -62,6 +73,7 @@ public:
 	const PlayerConfiguration& getPlayerConfig() const;
 	const PipeConfiguration& getPipeConfig() const;
 	const CloudConfiguration& getCloudConfig() const;
+	const ScoreConfiguration& getScoreConfig() const;
 
 	//setters
 	void setPipeGapPos(const sf::Vector2f& gapPos);

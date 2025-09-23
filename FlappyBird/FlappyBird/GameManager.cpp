@@ -77,6 +77,10 @@ void GameManager::startGame()
 	//init Player
 	this->makeObject(ObjectName::player);
 
+	//init score
+	this->score.emplace(this->gameConfig.getScoreConfig());
+	this->eventHandler.addObserver(&this->score.value());
+
 	//start clock
 	this->gameClock.start();
 }
@@ -142,6 +146,7 @@ void GameManager::renderGame()
 	this->gameWindow.clear(sf::Color::Cyan);
 
 	this->gameScene.draw(this->gameWindow);
+	this->score->draw(this->gameWindow);
 
 	this->gameWindow.display();
 }

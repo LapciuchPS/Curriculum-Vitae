@@ -2,6 +2,7 @@
 #include "EventHandler.h"
 #include "Player.h"
 #include "InteractableObjects.h"
+#include "ScoreSystem.h"
 
 using Type = Event::EventType;
 
@@ -70,12 +71,11 @@ void EventHandler::checkPlayer(const sf::Vector2u& windowSize)
 
 		//gap
 		if (pipe->getGap()->checkCollision(playerHitbox))
-			this->notify(Event(Type::birdInGap));
+			this->notify(Event(Type::birdInGap, pipe));
 
-		//gap passed so add a point to the score
 		else if (pipe->getVisitedByBird())
-			//increase the score
-			;
+			//gap passed so add a point to the score
+			this->notify(Event(Type::passedPipe, pipe));
 	}
 
 	//collision with screen edges

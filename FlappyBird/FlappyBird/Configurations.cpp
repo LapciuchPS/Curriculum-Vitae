@@ -44,6 +44,15 @@ void GameConfiguration::initCloudVariables()
 	this->cloudConfig.direction = { -1.0, 0.f };
 }
 
+void GameConfiguration::initScoreVariables()
+{
+	sf::Vector2f scorePosition = sf::Vector2f({ this->gameWindowSize.x/2.f, this->gameWindowSize.y*0.2f });
+
+	this->scoreConfig.position = scorePosition;
+	this->scoreConfig.characterSize = this->gameWindowSize.y * 0.1f;
+	this->scoreConfig.outlineColor = sf::Color::Black;
+}
+
 void GameConfiguration::initVariables()
 {
 	//player
@@ -54,6 +63,9 @@ void GameConfiguration::initVariables()
 
 	//cloud
 	this->initCloudVariables();
+
+	//score
+	this->initScoreVariables();
 }
 
 //public functions
@@ -82,6 +94,11 @@ const PipeConfiguration& GameConfiguration::getPipeConfig() const
 const CloudConfiguration& GameConfiguration::getCloudConfig() const
 {
 	return this->cloudConfig;
+}
+
+const ScoreConfiguration& GameConfiguration::getScoreConfig() const
+{
+	return this->scoreConfig;
 }
 
 void GameConfiguration::setPipeGapPos(const sf::Vector2f& gapPos)

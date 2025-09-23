@@ -103,8 +103,12 @@ void Pipe::onNotify(const Event& event)
 		if (event.getEventType() == Type::outOfScreen)
 			this->isAlive = false;
 
-		if (event.getEventType() == Type::birdInGap)
+		else if (event.getEventType() == Type::birdInGap)
 			this->visitedByBird = true;
+
+		//got a point so the variable must be turned into false to prevent player from getting extra points
+		else if (event.getEventType() == Type::passedPipe)
+			this->visitedByBird = false;
 	}
 }
 

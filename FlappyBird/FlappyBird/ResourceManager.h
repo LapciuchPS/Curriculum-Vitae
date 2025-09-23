@@ -8,11 +8,13 @@ public:
 private:
 	//private variables
 	std::unordered_map<TextureID, sf::Texture> textures;
-	
+	sf::Font gameFont;
+
 	//private functions
 	std::string convertToStringTextureID(TextureID id);
  
 	void initTexture(TextureID id);
+	void initFont();
 
 	inline ResourceManager()
 	{
@@ -20,6 +22,7 @@ private:
 		this->initTexture(TextureID::cloud);
 		this->initTexture(TextureID::pipeMiddle);
 		this->initTexture(TextureID::pipeEnd);
+		this->initFont();
 	}
 	ResourceManager(const ResourceManager&) = delete;
 	ResourceManager& operator=(const ResourceManager&) = delete;
@@ -34,6 +37,7 @@ public:
 
 	//getters
 	const sf::Texture& getTexture(TextureID id) const;
+	const sf::Font& getFont() const;
 
 };
 

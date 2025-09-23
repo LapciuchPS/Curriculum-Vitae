@@ -1,20 +1,27 @@
 #pragma once
 #include "stdafx.h"
+#include "EventHandler.h"
 
-class ScoreSystem
+struct ScoreConfiguration;
+
+class ScoreSystem: public EventObserver
 {
 private:
 	//private variables
 	int score = 0;
-	sf::Font scoreFont;
+	sf::Vector2f scorePosition;
 	std::optional<sf::Text> scoreText;
 
+	//private methods
+	void updateScoreText();
+	void increaseScore(int points = 1);
+	void alignScore();
+	void onNotify(const Event& event) override;
 
 public:
-	ScoreSystem();
+	ScoreSystem(const ScoreConfiguration& scoreConfig);
 
-	void increaseScore(int points = 1);
-
+	void draw(sf::RenderTarget& target);
 	int getScore() const;
 
 };
