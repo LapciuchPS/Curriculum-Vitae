@@ -34,10 +34,10 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 	if (holePosY + pipeConfig.gapSizeY > windowSizeY)
 		holePosY -= pipeConfig.gapSizeY;
 
-	this->gap = std::make_unique<MapObject>(sf::Vector2f(pipeConfig.gapPosition.x, holePosY), sf::Vector2f(pipeConfig.pipeSize.x , pipeConfig.gapSizeY), pipeConfig.direction, pipeConfig.speed, objectID::undefined, std::make_unique<LinearMovement>());
+	this->gap = std::make_unique<MapObject>(sf::Vector2f(pipeConfig.gapPosition.x, holePosY), sf::Vector2f(pipeConfig.size.x , pipeConfig.gapSizeY), pipeConfig.direction, pipeConfig.speed, objectID::undefined, std::make_unique<LinearMovement>());
 
 	objectID newID = objectID::undefined;
-	float pipeHeight = pipeConfig.pipeSize.y;
+	float pipeHeight = pipeConfig.size.y;
 	float pipePositionY = holePosY;
 	bool pipeBeginning = true;
 
@@ -45,7 +45,7 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 	while (pipePositionY - pipeHeight > -pipeHeight)
 	{
 		pipePositionY -= pipeHeight;
-		pipeConfig.pipeStartingPoint.y = pipePositionY;
+		pipeConfig.startingPoint.y = pipePositionY;
 
 		if (pipeBeginning)
 		{
@@ -54,7 +54,7 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 		}
 		else newID = objectID::pipeMiddle;
 		
-		this->pipe.emplace_back(std::make_unique<MapObject>(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.direction ,pipeConfig.speed, newID, std::make_unique<LinearMovement>()));
+		this->pipe.emplace_back(std::make_unique<MapObject>(pipeConfig.startingPoint, pipeConfig.size, pipeConfig.direction ,pipeConfig.speed, newID, std::make_unique<LinearMovement>()));
 		this->initSprite(this->pipe.back()->getObjectID());
 	}
 
@@ -64,7 +64,7 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 	//lower pipe
 	do
 	{
-		pipeConfig.pipeStartingPoint.y = pipePositionY;
+		pipeConfig.startingPoint.y = pipePositionY;
 
 		if (pipeBeginning)
 		{
@@ -74,7 +74,7 @@ Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 		else newID = objectID::pipeMiddle;
 
 
-		this->pipe.emplace_back(std::make_unique<MapObject>(pipeConfig.pipeStartingPoint, pipeConfig.pipeSize, pipeConfig.direction, pipeConfig.speed, newID, std::make_unique<LinearMovement>()));
+		this->pipe.emplace_back(std::make_unique<MapObject>(pipeConfig.startingPoint, pipeConfig.size, pipeConfig.direction, pipeConfig.speed, newID, std::make_unique<LinearMovement>()));
 		this->initSprite(this->pipe.back()->getObjectID());
 
 		pipePositionY += pipeHeight;
@@ -127,10 +127,6 @@ MapObject* const Pipe::getGap() const
 	return this->gap.get();
 }
 
-bool Pipe::getIsOnScreen() const
-{
-	return this->pipe.front()->getIsOnScreen();
-}
 
 bool Pipe::getIsAlive() const
 {
@@ -144,7 +140,7 @@ bool Pipe::getVisitedByBird() const
 
 //Cloud
 Cloud::Cloud(const CloudConfiguration& cloudConfig):
-	MapObject(cloudConfig.cloudStartingPoint, cloudConfig.cloudSize, cloudConfig.direction, cloudConfig.speed, objectID::cloud, std::make_unique<LinearMovement>())
+	MapObject(cloudConfig.startingPoint, cloudConfig.size, cloudConfig.direction, cloudConfig.speed, objectID::cloud, std::make_unique<LinearMovement>())
 {
 	this->initObjectSprite(ResourceManager::get().getTexture(Texture::cloud));
 }
@@ -165,3 +161,48 @@ void Cloud::onNotify(const Event& event)
 		this->setIsAlive(false);
 }
 
+//Bonus
+Bonus::Bonus(BonusConfiguration& bonusConfig, BonusType type) :
+	MapObject(bonusConfig.startingPoint, bonusConfig.size, bonusConfig.direction, bonusConfig.speed, objectID::bonus, std::make_unique<LinearMovement>()),
+	type(type)
+{
+	MapObject::initObjectSprite(ResourceManager::get().getTexture(Texture::baloon));
+	this->initBonusSprite(this->type);
+}
+
+void Bonus::initBonusSprite(BonusType type)
+{
+	switch (type)
+	{
+	case BonusType::scoreChanger: break;
+	case BonusType::shield: break;
+	case BonusType::gravity: break;
+
+	default:;
+	}
+}
+
+void Bonus::update(float deltaTime)
+{
+	MapObject::update(deltaTime);
+	this->bonusSprite->setPosition(MapObject::getObjectPosition());
+}
+
+void Bonus::draw(sf::RenderTarget& target)
+{
+	MapObject::draw(target);
+	target.draw(this->bonusSprite.value());
+}
+
+//ScoreChanger
+ScoreChanger::ScoreChanger(BonusConfiguration& bonusConfig, int extraPoints):
+	Bonus(bonusConfig, BonusType::scoreChanger),
+	extraPoints(extraPoints)
+{
+
+}
+
+void ScoreChanger::onNotify(const Event& event)
+{
+
+}

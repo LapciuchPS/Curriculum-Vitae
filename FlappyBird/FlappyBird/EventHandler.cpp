@@ -88,7 +88,7 @@ void EventHandler::checkVisibility()
 {
 	for (auto& object : this->currentScene->getAll<T>())
 	{
-		if (object->getIsOnScreen())
+		if (object->getIsAlive())
 		{
 			sf::FloatRect hitbox = object->getObjectHitbox();
 

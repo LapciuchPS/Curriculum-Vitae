@@ -4,8 +4,8 @@
 #include "Configurations.h"
 
 Player::Player(const PlayerConfiguration& playerConfig) :
-	MapObject(playerConfig.startingPoint, playerConfig.size, playerConfig.direction, playerConfig.velocityY, SceneInterface::objectID::player, std::make_unique<LinearMovement>()),
-	frameSize(playerConfig.frameSize), velocityY(playerConfig.velocityY), gravity(playerConfig.gravity), jumpForce(playerConfig.jumpForce)
+	MapObject(playerConfig.startingPoint, playerConfig.size, playerConfig.direction, playerConfig.speed, SceneInterface::objectID::player, std::make_unique<LinearMovement>()),
+	frameSize(playerConfig.frameSize), velocityY(playerConfig.speed), gravity(playerConfig.gravity), jumpForce(playerConfig.jumpForce)
 {
 	MapObject::initObjectSprite(ResourceManager::get().getTexture(ResourceManager::TextureID::player), this->frameSize, playerConfig.frameScale);
 }

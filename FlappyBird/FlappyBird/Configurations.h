@@ -1,37 +1,35 @@
 #pragma once
 
-struct PlayerConfiguration
+struct ObjectConfiguration
 {
 	sf::Vector2f size;
 	sf::Vector2f startingPoint;
 	sf::Vector2f direction;
+	float speed;
+};
+
+struct PlayerConfiguration : public ObjectConfiguration
+{
 	sf::Vector2f frameScale;
 	sf::Vector2i frameSize;
-	float velocityY;
 	float gravity;
 	float jumpForce;
 };
 
-struct PipeConfiguration
+struct PipeConfiguration : public ObjectConfiguration
 {
-	//pipe
-	sf::Vector2f pipeSize;
-	sf::Vector2f pipeStartingPoint;
-	sf::Vector2f direction;
-	float speed;
-
 	//gap
 	float gapSizeY;
 	sf::Vector2f gapPosition;
-	
 };
 
-struct CloudConfiguration
+struct CloudConfiguration : public ObjectConfiguration
+{	
+};
+
+struct BonusConfiguration : public ObjectConfiguration
 {
-	sf::Vector2f cloudSize;
-	sf::Vector2f cloudStartingPoint;
-	sf::Vector2f direction;
-	float speed;
+	std::pair<int, int> extraPointsInterval;
 };
 
 struct ScoreConfiguration
@@ -59,10 +57,14 @@ private:
 	//score
 	ScoreConfiguration scoreConfig;
 
+	//bonus
+	BonusConfiguration bonusConfig;
+
 	void initPlayerVariables();
 	void initPipeVariables();
 	void initCloudVariables();
 	void initScoreVariables();
+	void initBonusVariables();
 	void initVariables();
 
 public:
@@ -70,13 +72,23 @@ public:
 
 	//getters
 	const sf::Vector2u& getGameWindowSize() const;
-	const PlayerConfiguration& getPlayerConfig() const;
-	const PipeConfiguration& getPipeConfig() const;
-	const CloudConfiguration& getCloudConfig() const;
-	const ScoreConfiguration& getScoreConfig() const;
+
+	template<typename T>
+	inline const T& getConfiguration() const
+	{
+		if constexpr (std::is_same_v<T, PlayerConfiguration>)
+			return this->playerConfig;
+		else if constexpr (std::is_same_v<T, PipeConfiguration>)
+			return this->pipeConfig;
+		else if constexpr (std::is_same_v<T, CloudConfiguration>)
+			return this->cloudConfig;
+		else if constexpr (std::is_same_v<T, BonusConfiguration>)
+			return this->bonusConfig;
+		else if constexpr (std::is_same_v<T, ScoreConfiguration>)
+			return  this->scoreConfig;
+	}
 
 	//setters
 	void setPipeGapPos(const sf::Vector2f& gapPos);
 	void setCloudPos(const sf::Vector2f& cloudPos);
 };
-

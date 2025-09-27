@@ -10,6 +10,7 @@ std::string ResourceManager::convertToStringTextureID(TextureID id)
 		case TextureID::pipeMiddle: return "pipe_middle.png"; break;
 		case TextureID::pipeEnd: return "pipe_end.png"; break;
 		case TextureID::cloud: return "cloud.png"; break;
+		case TextureID::baloon: return "baloon.png"; break;
 
 		//added exception!
 		default:"Unknown textureID";

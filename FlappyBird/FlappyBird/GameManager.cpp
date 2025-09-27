@@ -22,21 +22,21 @@ void GameManager::makeObject(ObjectName name)
 	switch (name)
 	{
 	case ObjectName::player:
-		newObject = std::make_unique<Player>(this->gameConfig.getPlayerConfig());
+		newObject = std::make_unique<Player>(this->gameConfig.getConfiguration<PlayerConfiguration>());
 		break;
 
 	case ObjectName::pipe:
 		randomPosY = this->rand_int(0, this->gameWindow.getSize().y);
 
 		this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
-		newObject = std::make_unique<Pipe>(this->gameConfig.getPipeConfig(), this->gameWindow.getSize().y);
+		newObject = std::make_unique<Pipe>(this->gameConfig.getConfiguration<PipeConfiguration>(), this->gameWindow.getSize().y);
 		break;
 
 	case ObjectName::cloud:
-		randomPosY = this->rand_int(0, this->gameWindow.getSize().y - this->gameConfig.getCloudConfig().cloudSize.y/2);
+		randomPosY = this->rand_int(0, this->gameWindow.getSize().y - this->gameConfig.getConfiguration<CloudConfiguration>().size.y/2);
 
 		this->gameConfig.setCloudPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
-		newObject = std::make_unique<Cloud>(this->gameConfig.getCloudConfig());
+		newObject = std::make_unique<Cloud>(this->gameConfig.getConfiguration<CloudConfiguration>());
 		break;
 	}
 
@@ -47,8 +47,7 @@ void GameManager::makeObject(ObjectName name)
 }
 
 void GameManager::makeObstacles()
-{
-	
+{ 
 	if (this->gameClock.getElapsedTime().asSeconds() >= 3.f)
 	{
 		//init Pipe 
@@ -78,7 +77,7 @@ void GameManager::startGame()
 	this->makeObject(ObjectName::player);
 
 	//init score
-	this->score.emplace(this->gameConfig.getScoreConfig());
+	this->score.emplace(this->gameConfig.getConfiguration<ScoreConfiguration>());
 	this->eventHandler.addObserver(&this->score.value());
 
 	//start clock

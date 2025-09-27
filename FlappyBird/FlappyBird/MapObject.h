@@ -10,7 +10,6 @@ private:
 	sf::Vector2f moveDirection;
 	objectID ID;
 	float speed;
-	bool isOnScreen;
 	bool isAlive;
 	std::unique_ptr<MovementBehaviour> movementStrategy;
 	std::optional<sf::Sprite> objectSprite;
@@ -51,8 +50,8 @@ protected:
 
 public:
 	//public functions
-	inline MapObject(const sf::Vector2f& position = { 0.f,0.f }, const sf::Vector2f& size = sf::Vector2f({ 0.f,0.f }), const sf::Vector2f& moveDirection = { 0,0 }, float speed = 0.f,  const objectID ID = objectID::undefined, std::unique_ptr<MovementBehaviour> movementStrategy = nullptr, bool isOnScreen = true, bool isAlive = true)
-		: objectHitbox(position, size), moveDirection(moveDirection), speed(speed), isOnScreen(isOnScreen), ID(ID), movementStrategy(std::move(movementStrategy)), isAlive(isAlive)
+	inline MapObject(const sf::Vector2f& position = { 0.f,0.f }, const sf::Vector2f& size = sf::Vector2f({ 0.f,0.f }), const sf::Vector2f& moveDirection = { 0,0 }, float speed = 0.f,  const objectID ID = objectID::undefined, std::unique_ptr<MovementBehaviour> movementStrategy = nullptr, bool isAlive = true)
+		: objectHitbox(position, size), moveDirection(moveDirection), speed(speed), ID(ID), movementStrategy(std::move(movementStrategy)), isAlive(isAlive)
 	{ }
 
 	virtual ~MapObject() = default;
@@ -94,7 +93,7 @@ public:
 		if (this->getObjectID() == SceneInterface::objectID::undefined)
 			target.draw(sketch);*/
 
-		if (this->objectSprite.has_value())
+		if (this->objectSprite.has_value()&&this->isAlive)
 		{
 			this->objectSprite->setPosition(this->objectHitbox.position + this->objectHitbox.size / 2.f);
 			target.draw(this->objectSprite.value());
@@ -142,11 +141,6 @@ public:
 	{
 		if (this->objectSprite.has_value())
 			return *this->objectSprite;
-	}
-
-	inline bool getIsOnScreen() const
-	{
-		return this->isOnScreen;
 	}
 
 	inline bool getIsAlive() const override

@@ -10,7 +10,7 @@ void GameConfiguration::initPlayerVariables()
 	this->playerConfig.startingPoint = sf::Vector2f({ this->gameWindowSize.x * 0.3f, this->gameWindowSize.y * 0.5f });
 	this->playerConfig.frameScale = { 2.3f, 2.3f };
 	this->playerConfig.frameSize = sf::Vector2i({ 64,64 });
-	this->playerConfig.velocityY = 0.f;
+	this->playerConfig.speed = 0.f;
 	this->playerConfig.gravity = 2000.f;
 	this->playerConfig.jumpForce = 700.f;
 	this->playerConfig.direction = { 0.f, -1.f };
@@ -21,9 +21,9 @@ void GameConfiguration::initPipeVariables()
 	//pipe
 	float pipeSideSize = this->gameWindowSize.y * 0.12f;
 
-	this->pipeConfig.pipeSize = sf::Vector2f({ pipeSideSize, pipeSideSize });
+	this->pipeConfig.size = sf::Vector2f({ pipeSideSize, pipeSideSize });
 	this->pipeConfig.speed = this->gameWindowSize.x * 0.15f;
-	this->pipeConfig.pipeStartingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y)});
+	this->pipeConfig.startingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y)});
 	this->pipeConfig.direction = { -1.0, 0.f };
 
 	//gap
@@ -38,10 +38,25 @@ void GameConfiguration::initCloudVariables()
 	float cloudSideX = this->gameWindowSize.x * 0.27f;
 	float cloudSideY = cloudSideX * 25/55;
 
-	this->cloudConfig.cloudSize = sf::Vector2f(cloudSideX, cloudSideY);
-	this->cloudConfig.cloudStartingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y) });
+	this->cloudConfig.size = sf::Vector2f(cloudSideX, cloudSideY);
+	this->cloudConfig.startingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y) });
 	this->cloudConfig.speed = this->gameWindowSize.x * 0.08f;
 	this->cloudConfig.direction = { -1.0, 0.f };
+}
+
+void GameConfiguration::initBonusVariables()
+{
+	//texture proportion (balloon texture): x - 20, y - 24 px
+	//balloon with a rope: x - 20, y - 41 px
+
+	float cloudSideY = this->gameWindowSize.y * 0.05f;
+	float cloudSideX = cloudSideY * 20 / 24;
+	
+	this->bonusConfig.extraPointsInterval = std::pair(-2, 1);
+	this->bonusConfig.size = { cloudSideX, cloudSideY };
+	this->bonusConfig.startingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y) });
+	this->bonusConfig.direction = { -1.f, 0.f };
+	this->bonusConfig.speed = this->gameWindowSize.x * 0.15f;
 }
 
 void GameConfiguration::initScoreVariables()
@@ -64,6 +79,9 @@ void GameConfiguration::initVariables()
 	//cloud
 	this->initCloudVariables();
 
+	//bonus
+	this->initBonusVariables();
+
 	//score
 	this->initScoreVariables();
 }
@@ -81,26 +99,6 @@ const sf::Vector2u& GameConfiguration::getGameWindowSize() const
 	return this->gameWindowSize;
 }
 
-const PlayerConfiguration& GameConfiguration::getPlayerConfig() const
-{
-	return this->playerConfig;
-}
-
-const PipeConfiguration& GameConfiguration::getPipeConfig() const
-{
-	return this->pipeConfig;
-}
-
-const CloudConfiguration& GameConfiguration::getCloudConfig() const
-{
-	return this->cloudConfig;
-}
-
-const ScoreConfiguration& GameConfiguration::getScoreConfig() const
-{
-	return this->scoreConfig;
-}
-
 void GameConfiguration::setPipeGapPos(const sf::Vector2f& gapPos)
 {
 	this->pipeConfig.gapPosition = gapPos;
@@ -108,5 +106,5 @@ void GameConfiguration::setPipeGapPos(const sf::Vector2f& gapPos)
 
 void GameConfiguration::setCloudPos(const sf::Vector2f& cloudPos)
 {
-	this->cloudConfig.cloudStartingPoint = cloudPos;
+	this->cloudConfig.startingPoint = cloudPos;
 }

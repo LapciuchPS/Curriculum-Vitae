@@ -6,7 +6,7 @@ class EventHandler;
 class SceneInterface
 {
 protected:
-	enum class objectID { undefined = 0, player, pipeEndUp, pipeEndDown, pipeMiddle, enemyBird, cloud, wind };
+	enum class objectID { undefined = 0, player, pipeEndUp, pipeEndDown, pipeMiddle, enemyBird, cloud, bonus, wind };
 
 public:
 	virtual ~SceneInterface() = default;

@@ -4,6 +4,7 @@
 
 struct PipeConfiguration;
 struct CloudConfiguration;
+struct BonusConfiguration;
 
 //Pipe
 class Pipe : public SceneInterface, public EventObserver
@@ -18,7 +19,6 @@ private:
 
 public:
 	Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive = true);
-
 	void update(float deltaTime);
 	void draw(sf::RenderTarget& target);
 
@@ -28,7 +28,6 @@ public:
 	const std::vector<std::unique_ptr<MapObject>>& getPipeParts() const;
 	const sf::FloatRect& getObjectHitbox() const;
 	MapObject* const getGap() const;
-	bool getIsOnScreen() const;
 	bool getIsAlive() const override;
 	bool getVisitedByBird() const;
 
@@ -44,6 +43,36 @@ public:
 
 	void update(float deltaTime);
 	void draw(sf::RenderTarget& target);
+
+	void onNotify(const Event& event) override;
+};
+
+//Bonus
+class Bonus : public MapObject, public EventObserver
+{
+protected:
+	//protected variables
+	enum class BonusType {scoreChanger, shield, gravity};
+	BonusType type;
+
+private:
+	std::optional<sf::Sprite> bonusSprite;
+
+public:
+	Bonus(BonusConfiguration& bonusConfig, BonusType type);
+
+	void initBonusSprite(BonusType type);
+
+	void update(float deltaTime);
+	void draw(sf::RenderTarget& target);
+};
+
+class ScoreChanger : public Bonus
+{
+private:
+	int extraPoints;
+public:
+	ScoreChanger(BonusConfiguration& bonusConfig, int extraPoints);
 
 	void onNotify(const Event& event) override;
 };
