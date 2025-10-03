@@ -13,7 +13,7 @@ private:
 	sf::Clock deltaTimeClock, gameClock;
 	float deltaTime = 0;
 
-	enum class ObjectName {player, pipe, cloud};
+	enum class ObjectName {player, pipe, cloud, bonus};
 
 	//GameConfig
 	GameConfiguration gameConfig;

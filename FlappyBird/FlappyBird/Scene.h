@@ -1,6 +1,7 @@
 #pragma once
 
 class Player;
+class Pipe;
 class EventHandler;
 
 class SceneInterface
@@ -43,6 +44,7 @@ public:
 
 	//gettes
 	Player* getPlayer() const;
+	Pipe* getLastPipe() const;
 
 	template<typename T>
 	inline std::vector<T*> getAll() const
@@ -57,6 +59,4 @@ public:
 
 		return wantedObjects;
 	}
-
-
 };

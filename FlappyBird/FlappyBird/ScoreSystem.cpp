@@ -2,6 +2,7 @@
 #include "ScoreSystem.h"
 #include "ResourceManager.h"
 #include "Configurations.h"
+#include "InteractableObjects.h"
 
 void ScoreSystem::increaseScore(int points)
 {
@@ -17,11 +18,20 @@ void ScoreSystem::alignScore()
 
 void ScoreSystem::onNotify(const Event& event)
 {
+	int points = 0;
+
 	if (event.getEventType() == Event::EventType::passedPipe)
+		points = 1;
+	else if (event.getEventType() == Event::EventType::bonusCollision)
+		if(auto* ptr = dynamic_cast<ScoreChanger*>(event.getFirst()))
+			points = ptr->getExtraPoints();
+
+	if (points)
 	{
-		this->increaseScore();
+		this->increaseScore(points);
 		this->updateScoreText();
-	}	
+	}
+	
 }
 
 void ScoreSystem::updateScoreText()

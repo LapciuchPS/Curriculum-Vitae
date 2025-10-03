@@ -6,7 +6,7 @@ class Scene;
 class Event
 {
 public:
-	enum class EventType {screenCollision, pipeCollision, outOfScreen, birdInGap, passedPipe };
+	enum class EventType {screenCollision, pipeCollision, outOfScreen, birdInGap, passedPipe, bonusCollision };
 
 private:
 	EventType type;

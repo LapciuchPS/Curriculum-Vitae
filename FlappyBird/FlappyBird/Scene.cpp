@@ -75,3 +75,12 @@ Player* Scene::getPlayer() const
 	return nullptr;
 }
 
+Pipe* Scene::getLastPipe() const
+{
+	for (auto it = this->sceneObjects.rbegin(); it != this->sceneObjects.rend(); ++it)
+		if (Pipe* pipe = dynamic_cast<Pipe*>(it->get()))
+			return pipe;
+
+	return nullptr;
+}
+

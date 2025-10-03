@@ -60,7 +60,7 @@ public:
 	{
 		this->objectSprite.emplace(texture);
 
-		//it means that a texture isn't a spritesheet so it can be easly rescaled
+		//it means that a texture doesn't have any additional conditions and can be easily scaled
 		if (frameSize == sf::Vector2i({ 0,0 }))
 			frameSize = { static_cast<int>(texture.getSize().x), static_cast<int>(texture.getSize().y) };
 
@@ -69,7 +69,7 @@ public:
 
 		this->objectSprite->setOrigin({frameSize.x / 2.f, frameSize.y / 2.f});
 		this->objectSprite->setScale({ scaleX, scaleY });
-		this->objectSprite->setTextureRect({ {0,0}, frameSize });
+		this->objectSprite->setTexture(texture);
 	}
 
 	inline bool checkCollision(const sf::FloatRect& otherHitbox)
@@ -88,12 +88,13 @@ public:
 		/*sf::RectangleShape sketch(this->objectHitbox.size);
 		sketch.setFillColor(sf::Color::Yellow);
 		sketch.setOutlineColor(sf::Color::Black);
-		sketch.setOutlineThickness(1);
+		sketch.setOutlineThickness(2);
 		sketch.setPosition(this->objectHitbox.position);
-		if (this->getObjectID() == SceneInterface::objectID::undefined)
+
+		if (this->getObjectID() == SceneInterface::objectID::bonus)
 			target.draw(sketch);*/
 
-		if (this->objectSprite.has_value()&&this->isAlive)
+		if (this->objectSprite.has_value())
 		{
 			this->objectSprite->setPosition(this->objectHitbox.position + this->objectHitbox.size / 2.f);
 			target.draw(this->objectSprite.value());

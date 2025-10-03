@@ -162,12 +162,12 @@ void Cloud::onNotify(const Event& event)
 }
 
 //Bonus
-Bonus::Bonus(BonusConfiguration& bonusConfig, BonusType type) :
+Bonus::Bonus(const BonusConfiguration& bonusConfig, BonusType type, float windowSizeY) :
 	MapObject(bonusConfig.startingPoint, bonusConfig.size, bonusConfig.direction, bonusConfig.speed, objectID::bonus, std::make_unique<LinearMovement>()),
-	type(type)
+	type(type), windowSizeY(windowSizeY)
 {
-	MapObject::initObjectSprite(ResourceManager::get().getTexture(Texture::baloon));
-	this->initBonusSprite(this->type);
+	this->initObjectSprite(ResourceManager::get().getTexture(Texture::baloon), bonusConfig.frameSize, {1.25f, 1.25f});
+	//this->initBonusSprite(this->type);
 }
 
 void Bonus::initBonusSprite(BonusType type)
@@ -184,25 +184,41 @@ void Bonus::initBonusSprite(BonusType type)
 
 void Bonus::update(float deltaTime)
 {
+	if (MapObject::getObjectPosition().y <= windowSizeY * 0.1)
+		MapObject::setMoveDirection({ -1.f, 1.f });
+	else if (MapObject::getObjectPosition().y >= windowSizeY * 0.9 - MapObject::getObjectSize().y)
+		MapObject::setMoveDirection({ -1.f, -1.f });
+
 	MapObject::update(deltaTime);
-	this->bonusSprite->setPosition(MapObject::getObjectPosition());
+	//this->bonusSprite->setPosition(MapObject::getObjectPosition());
 }
 
 void Bonus::draw(sf::RenderTarget& target)
 {
 	MapObject::draw(target);
-	target.draw(this->bonusSprite.value());
+	//target.draw(this->bonusSprite.value());
+}
+
+void Bonus::onNotify(const Event& event)
+{
+	if (event.getFirst() == this)
+		this->setIsAlive(false);
+}
+
+Bonus::BonusType Bonus::getBonusType() const
+{
+	return this->type;
 }
 
 //ScoreChanger
-ScoreChanger::ScoreChanger(BonusConfiguration& bonusConfig, int extraPoints):
-	Bonus(bonusConfig, BonusType::scoreChanger),
+ScoreChanger::ScoreChanger(const BonusConfiguration& bonusConfig, float windowSizeY, int extraPoints):
+	Bonus(bonusConfig, BonusType::scoreChanger, windowSizeY),
 	extraPoints(extraPoints)
 {
 
 }
 
-void ScoreChanger::onNotify(const Event& event)
+int ScoreChanger::getExtraPoints() const
 {
-
+	return this->extraPoints;
 }

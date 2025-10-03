@@ -72,10 +72,16 @@ void EventHandler::checkPlayer(const sf::Vector2u& windowSize)
 		//gap
 		if (pipe->getGap()->checkCollision(playerHitbox))
 			this->notify(Event(Type::birdInGap, pipe));
-
 		else if (pipe->getVisitedByBird())
 			//gap passed so add a point to the score
 			this->notify(Event(Type::passedPipe, pipe));
+	}
+
+	//collision with bonuses
+	for (const auto& bonus : this->currentScene->getAll<Bonus>())
+	{
+		if (bonus->checkCollision(playerHitbox))
+			this->notify(Event(Type::bonusCollision, bonus));
 	}
 
 	//collision with screen edges

@@ -38,6 +38,17 @@ void GameManager::makeObject(ObjectName name)
 		this->gameConfig.setCloudPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
 		newObject = std::make_unique<Cloud>(this->gameConfig.getConfiguration<CloudConfiguration>());
 		break;
+
+	case ObjectName::bonus:
+		randomPosY = this->rand_int(0, this->gameWindow.getSize().y);
+		float posX = this->gameConfig.getConfiguration<BonusConfiguration>().spawnLocationX;
+
+		this->gameConfig.setBonusPos(sf::Vector2f(posX, randomPosY));
+
+		int pointsNumber = this->rand_int(-1,1);
+
+		newObject = std::make_unique<ScoreChanger>(this->gameConfig.getConfiguration<BonusConfiguration>(),this->gameWindow.getSize().y, pointsNumber);
+		break;
 	}
 
 	if (EventObserver* ptr = dynamic_cast<EventObserver*>(newObject.get()))
@@ -48,21 +59,49 @@ void GameManager::makeObject(ObjectName name)
 
 void GameManager::makeObstacles()
 { 
-	if (this->gameClock.getElapsedTime().asSeconds() >= 3.f)
+	static bool cloudGenerate = false, firstFrame = true;
+
+	if (!this->gameScene.getLastPipe())
+		return;
+
+	float lastPipePosX = this->gameScene.getLastPipe()->getObjectHitbox().position.x;
+
+	if (lastPipePosX <= this->gameConfig.getConfiguration<PipeConfiguration>().spawnLocationX)
 	{
-		//init Pipe 
 		this->makeObject(ObjectName::pipe);
 
-		switch (this->rand_int(0, 3))
+		if (cloudGenerate)
 		{
-		case 0: //this->makeObject(ObjectName::pipe); break;
-
-		case 1: this->makeObject(ObjectName::cloud); break;
-
+			this->makeObject(ObjectName::bonus);
+			cloudGenerate = false;
 		}
-
-		this->gameClock.restart();
 	}
+		
+	int timeSec = this->gameClock.getElapsedTime().asSeconds();
+
+	//init cloud
+	if (timeSec >= )
+	{
+		if (firstFrame)
+		{
+			this->makeObject(ObjectName::cloud);
+			cloudGenerate = true;
+			firstFrame = false;
+		}
+	}
+	else firstFrame = true;
+		
+	//switch (this->rand_int(0, 3))
+	//{
+	//case 0: //this->makeObject(ObjectName::pipe); break;
+
+	//case 1: this->makeObject(ObjectName::cloud); break;
+
+	//case 2: //this->makeObject(ObjectName::bonus); break;
+
+	//}
+
+	
 }
 
 void GameManager::initWindow()
@@ -75,6 +114,9 @@ void GameManager::startGame()
 {
 	//init Player
 	this->makeObject(ObjectName::player);
+
+	//init pipe
+	this->makeObject(ObjectName::pipe);
 
 	//init score
 	this->score.emplace(this->gameConfig.getConfiguration<ScoreConfiguration>());

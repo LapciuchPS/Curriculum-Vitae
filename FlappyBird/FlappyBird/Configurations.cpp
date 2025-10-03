@@ -29,6 +29,9 @@ void GameConfiguration::initPipeVariables()
 	//gap
 	this->pipeConfig.gapSizeY = this->gameWindowSize.y * 0.23f;
 	this->pipeConfig.gapPosition = { 0,0 };
+
+	//space between pipes
+	this->pipeConfig.spawnLocationX = this->gameWindowSize.x * 0.55;
 }
 
 void GameConfiguration::initCloudVariables()
@@ -42,6 +45,7 @@ void GameConfiguration::initCloudVariables()
 	this->cloudConfig.startingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y) });
 	this->cloudConfig.speed = this->gameWindowSize.x * 0.08f;
 	this->cloudConfig.direction = { -1.0, 0.f };
+	this->cloudConfig.spawnTime = sf::seconds(10);
 }
 
 void GameConfiguration::initBonusVariables()
@@ -49,14 +53,19 @@ void GameConfiguration::initBonusVariables()
 	//texture proportion (balloon texture): x - 20, y - 24 px
 	//balloon with a rope: x - 20, y - 41 px
 
-	float cloudSideY = this->gameWindowSize.y * 0.05f;
+	float cloudSideY = this->gameWindowSize.y * 0.07f;
 	float cloudSideX = cloudSideY * 20 / 24;
 	
 	this->bonusConfig.extraPointsInterval = std::pair(-2, 1);
 	this->bonusConfig.size = { cloudSideX, cloudSideY };
 	this->bonusConfig.startingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y) });
-	this->bonusConfig.direction = { -1.f, 0.f };
+	this->bonusConfig.direction = { -1.f, 1.f };
 	this->bonusConfig.speed = this->gameWindowSize.x * 0.15f;
+	this->bonusConfig.frameSize = { 20, 24 };
+	this->cloudConfig.spawnTime = sf::seconds(10);
+
+	//bonus location - the center between two pipes (without hitboxes size)
+	this->bonusConfig.spawnLocationX = this->gameWindowSize.x + (this->gameWindowSize.x - this->pipeConfig.spawnLocationX)/2 + this->pipeConfig.size.x/2;
 }
 
 void GameConfiguration::initScoreVariables()
@@ -93,6 +102,12 @@ GameConfiguration::GameConfiguration(const sf::Vector2u& windowSize) :
 	this->initVariables();
 }
 
+void GameConfiguration::updatePassedTime(float deltaTime)
+{
+	this->addTimeToPassedTime<CloudConfiguration>(deltaTime);
+	this->addTimeToPassedTime<BonusConfiguration>(deltaTime);
+}
+
 //getters
 const sf::Vector2u& GameConfiguration::getGameWindowSize() const
 {
@@ -107,4 +122,9 @@ void GameConfiguration::setPipeGapPos(const sf::Vector2f& gapPos)
 void GameConfiguration::setCloudPos(const sf::Vector2f& cloudPos)
 {
 	this->cloudConfig.startingPoint = cloudPos;
+}
+
+void GameConfiguration::setBonusPos(const sf::Vector2f& BonusPos)
+{
+	this->bonusConfig.startingPoint = BonusPos;
 }

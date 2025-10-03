@@ -50,21 +50,29 @@ public:
 //Bonus
 class Bonus : public MapObject, public EventObserver
 {
-protected:
-	//protected variables
-	enum class BonusType {scoreChanger, shield, gravity};
-	BonusType type;
+public: 
+	enum class BonusType { scoreChanger, shield, gravity };
 
 private:
 	std::optional<sf::Sprite> bonusSprite;
+	float windowSizeY;
+
+protected:
+	BonusType type;
 
 public:
-	Bonus(BonusConfiguration& bonusConfig, BonusType type);
+	Bonus(const BonusConfiguration& bonusConfig, BonusType type, float windowSizeY);
 
 	void initBonusSprite(BonusType type);
 
 	void update(float deltaTime);
 	void draw(sf::RenderTarget& target);
+
+	void onNotify(const Event& event) override;
+
+	//getters
+	BonusType getBonusType() const;
+
 };
 
 class ScoreChanger : public Bonus
@@ -72,7 +80,8 @@ class ScoreChanger : public Bonus
 private:
 	int extraPoints;
 public:
-	ScoreChanger(BonusConfiguration& bonusConfig, int extraPoints);
+	ScoreChanger(const BonusConfiguration& bonusConfig, float windowSizeY, int extraPoints);
 
-	void onNotify(const Event& event) override;
+	//getters
+	int getExtraPoints() const;
 };

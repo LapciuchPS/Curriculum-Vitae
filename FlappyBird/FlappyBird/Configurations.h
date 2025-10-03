@@ -8,6 +8,13 @@ struct ObjectConfiguration
 	float speed;
 };
 
+struct SpawnConfiguration
+{
+	float spawnLocationX;
+	sf::Time spawnTime;
+	sf::Time passedTime = sf::seconds(0);
+};
+
 struct PlayerConfiguration : public ObjectConfiguration
 {
 	sf::Vector2f frameScale;
@@ -16,20 +23,21 @@ struct PlayerConfiguration : public ObjectConfiguration
 	float jumpForce;
 };
 
-struct PipeConfiguration : public ObjectConfiguration
+struct PipeConfiguration : public ObjectConfiguration, public SpawnConfiguration
 {
 	//gap
 	float gapSizeY;
 	sf::Vector2f gapPosition;
 };
 
-struct CloudConfiguration : public ObjectConfiguration
+struct CloudConfiguration : public ObjectConfiguration, public SpawnConfiguration
 {	
 };
 
-struct BonusConfiguration : public ObjectConfiguration
+struct BonusConfiguration : public ObjectConfiguration, public SpawnConfiguration
 {
 	std::pair<int, int> extraPointsInterval;
+	sf::Vector2i frameSize;
 };
 
 struct ScoreConfiguration
@@ -54,11 +62,11 @@ private:
 	//cloud 
 	CloudConfiguration cloudConfig;
 
-	//score
-	ScoreConfiguration scoreConfig;
-
 	//bonus
 	BonusConfiguration bonusConfig;
+
+	//score
+	ScoreConfiguration scoreConfig;
 
 	void initPlayerVariables();
 	void initPipeVariables();
@@ -67,8 +75,19 @@ private:
 	void initBonusVariables();
 	void initVariables();
 
+	template<typename T>
+	inline void addTimeToPassedTime(float deltaTime)
+	{
+		if constexpr (std::is_same_v<T, CloudConfiguration>)
+			this->cloudConfig.passedTime += deltaTime;
+		else if constexpr (std::is_same_v<T, BonusConfiguration>)
+			this->bonusConfig.passedTime += deltaTime;
+	}
+
 public:
 	GameConfiguration(const sf::Vector2u& windowSize = { 1920, 1080 });
+
+	void updatePassedTime(float deltaTime);
 
 	//getters
 	const sf::Vector2u& getGameWindowSize() const;
@@ -91,4 +110,25 @@ public:
 	//setters
 	void setPipeGapPos(const sf::Vector2f& gapPos);
 	void setCloudPos(const sf::Vector2f& cloudPos);
+	void setBonusPos(const sf::Vector2f& BonusPos);
+
+	template<typename T>
+	inline void setObjectSpawnTime(float time, std::string timeType)
+	{
+		if (timeType = "spawnTime")
+		{
+			if constexpr (std::is_same_v<T, CloudConfiguration>)
+				this->cloudConfig.spawnTime = sf::seconds(time);
+			else if constexpr (std::is_same_v<T, BonusConfiguration>)
+				this->bonusConfig.spawnTime = sf::seconds(time);
+		}
+		else if (timeType = "passedTime")
+		{
+			if constexpr (std::is_same_v<T, CloudConfiguration>)
+				this->cloudConfig.passedTime = 0;
+			else if constexpr (std::is_same_v<T, BonusConfiguration>)
+				this->bonusConfig.Time = 0;
+		}
+		
+	}
 };
