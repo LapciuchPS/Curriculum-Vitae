@@ -28,14 +28,14 @@ void GameManager::makeObject(ObjectName name)
 	case ObjectName::pipe:
 		randomPosY = this->rand_int(0, this->gameWindow.getSize().y);
 
-		this->gameConfig.setPipeGapPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
+		this->gameConfig.setObjectPos<PipeConfiguration>(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
 		newObject = std::make_unique<Pipe>(this->gameConfig.getConfiguration<PipeConfiguration>(), this->gameWindow.getSize().y);
 		break;
 
 	case ObjectName::cloud:
 		randomPosY = this->rand_int(0, this->gameWindow.getSize().y - this->gameConfig.getConfiguration<CloudConfiguration>().size.y/2);
 
-		this->gameConfig.setCloudPos(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
+		this->gameConfig.setObjectPos<CloudConfiguration>(sf::Vector2f(this->gameWindow.getSize().x, randomPosY));
 		newObject = std::make_unique<Cloud>(this->gameConfig.getConfiguration<CloudConfiguration>());
 		break;
 
@@ -43,7 +43,7 @@ void GameManager::makeObject(ObjectName name)
 		randomPosY = this->rand_int(0, this->gameWindow.getSize().y);
 		float posX = this->gameConfig.getConfiguration<BonusConfiguration>().spawnLocationX;
 
-		this->gameConfig.setBonusPos(sf::Vector2f(posX, randomPosY));
+		this->gameConfig.setObjectPos<BonusConfiguration>(sf::Vector2f(posX, randomPosY));
 
 		int pointsNumber = this->rand_int(-1,1);
 
@@ -57,51 +57,60 @@ void GameManager::makeObject(ObjectName name)
 	this->gameScene.addObject(std::move(newObject));
 }
 
+template<typename T>
+void GameManager::changeSpawnCondition()
+{
+	//reset passed time
+	this->gameConfig.setObjectTime<T>(0, "passedTime");
+
+	//change spawn time for the next cloud
+	int spawnIntervalMin = this->gameConfig.getConfiguration<T>().spawnTimeInterval.first;
+	int spawnIntervalMax = this->gameConfig.getConfiguration<T>().spawnTimeInterval.second;
+
+	int newSpawnTime = this->rand_int(spawnIntervalMin, spawnIntervalMax);
+	this->gameConfig.setObjectTime<T>(newSpawnTime, "spawnTime");
+}
+
 void GameManager::makeObstacles()
 { 
-	static bool cloudGenerate = false, firstFrame = true;
+	static bool bonusGenerate = false;
 
 	if (!this->gameScene.getLastPipe())
 		return;
 
+	//spawn pipe
 	float lastPipePosX = this->gameScene.getLastPipe()->getObjectHitbox().position.x;
 
 	if (lastPipePosX <= this->gameConfig.getConfiguration<PipeConfiguration>().spawnLocationX)
 	{
 		this->makeObject(ObjectName::pipe);
 
-		if (cloudGenerate)
+		if (bonusGenerate)
 		{
 			this->makeObject(ObjectName::bonus);
-			cloudGenerate = false;
+			bonusGenerate = false;
 		}
 	}
 		
-	int timeSec = this->gameClock.getElapsedTime().asSeconds();
+	//spawn other objects
+	this->gameConfig.updatePassedTime(this->deltaTime);
 
-	//init cloud
-	if (timeSec >= )
+	//spawn cloud
+	if (this->gameConfig.canBeSpawned<CloudConfiguration>())
 	{
-		if (firstFrame)
-		{
-			this->makeObject(ObjectName::cloud);
-			cloudGenerate = true;
-			firstFrame = false;
-		}
+		this->makeObject(ObjectName::cloud);
+
+		this->changeSpawnCondition<CloudConfiguration>();
 	}
-	else firstFrame = true;
+
+	//spawn cloud
+	if (this->gameConfig.canBeSpawned<BonusConfiguration>())
+	{
+		bonusGenerate = true;
+
+		this->changeSpawnCondition<BonusConfiguration>();
+	}
 		
-	//switch (this->rand_int(0, 3))
-	//{
-	//case 0: //this->makeObject(ObjectName::pipe); break;
-
-	//case 1: this->makeObject(ObjectName::cloud); break;
-
-	//case 2: //this->makeObject(ObjectName::bonus); break;
-
-	//}
-
-	
 }
 
 void GameManager::initWindow()

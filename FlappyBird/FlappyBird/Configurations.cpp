@@ -45,7 +45,8 @@ void GameConfiguration::initCloudVariables()
 	this->cloudConfig.startingPoint = sf::Vector2f({ static_cast<float>(this->gameWindowSize.x), static_cast<float>(this->gameWindowSize.y) });
 	this->cloudConfig.speed = this->gameWindowSize.x * 0.08f;
 	this->cloudConfig.direction = { -1.0, 0.f };
-	this->cloudConfig.spawnTime = sf::seconds(10);
+	this->cloudConfig.spawnTime = 5.f;
+	this->cloudConfig.spawnTimeInterval = {1, 15};
 }
 
 void GameConfiguration::initBonusVariables()
@@ -62,7 +63,8 @@ void GameConfiguration::initBonusVariables()
 	this->bonusConfig.direction = { -1.f, 1.f };
 	this->bonusConfig.speed = this->gameWindowSize.x * 0.15f;
 	this->bonusConfig.frameSize = { 20, 24 };
-	this->cloudConfig.spawnTime = sf::seconds(10);
+	this->bonusConfig.spawnTime = 8.f;
+	this->bonusConfig.spawnTimeInterval = { 15, 20 };
 
 	//bonus location - the center between two pipes (without hitboxes size)
 	this->bonusConfig.spawnLocationX = this->gameWindowSize.x + (this->gameWindowSize.x - this->pipeConfig.spawnLocationX)/2 + this->pipeConfig.size.x/2;
@@ -114,17 +116,3 @@ const sf::Vector2u& GameConfiguration::getGameWindowSize() const
 	return this->gameWindowSize;
 }
 
-void GameConfiguration::setPipeGapPos(const sf::Vector2f& gapPos)
-{
-	this->pipeConfig.gapPosition = gapPos;
-}
-
-void GameConfiguration::setCloudPos(const sf::Vector2f& cloudPos)
-{
-	this->cloudConfig.startingPoint = cloudPos;
-}
-
-void GameConfiguration::setBonusPos(const sf::Vector2f& BonusPos)
-{
-	this->bonusConfig.startingPoint = BonusPos;
-}

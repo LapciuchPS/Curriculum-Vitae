@@ -30,6 +30,10 @@ private:
 	//private functions
 	int rand_int(int low, int high);
 	void makeObject(ObjectName name);
+
+	template<typename T>
+	void changeSpawnCondition();
+
 	void makeObstacles();
 	void initWindow();
 	void startGame();
