@@ -40,6 +40,7 @@ struct BonusConfiguration : public ObjectConfiguration, public SpawnConfiguratio
 {
 	std::pair<int, int> extraPointsInterval;
 	sf::Vector2i frameSize;
+	sf::Vector2f frameScale;
 };
 
 struct ScoreConfiguration

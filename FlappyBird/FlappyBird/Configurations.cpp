@@ -53,7 +53,7 @@ void GameConfiguration::initBonusVariables()
 	//texture proportion (balloon texture): x - 20, y - 24 px
 	//balloon with a rope: x - 20, y - 41 px
 
-	float cloudSideY = this->gameWindowSize.y * 0.07f;
+	float cloudSideY = this->gameWindowSize.y * 0.08f;
 	float cloudSideX = cloudSideY * 20 / 24;
 	
 	this->bonusConfig.extraPointsInterval = std::pair(-2, 1);
@@ -62,6 +62,7 @@ void GameConfiguration::initBonusVariables()
 	this->bonusConfig.direction = { -1.f, 1.f };
 	this->bonusConfig.speed = this->gameWindowSize.x * 0.15f;
 	this->bonusConfig.frameSize = { 20, 24 };
+	this->bonusConfig.frameScale = { 1.3f,1.3f };
 	this->bonusConfig.spawnTime = 8.f;
 	this->bonusConfig.spawnTimeInterval = { 15, 20 };
 

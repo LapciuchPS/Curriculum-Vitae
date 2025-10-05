@@ -166,20 +166,31 @@ Bonus::Bonus(const BonusConfiguration& bonusConfig, BonusType type, float window
 	MapObject(bonusConfig.startingPoint, bonusConfig.size, bonusConfig.direction, bonusConfig.speed, objectID::bonus, std::make_unique<LinearMovement>()),
 	type(type), windowSizeY(windowSizeY)
 {
-	this->initObjectSprite(ResourceManager::get().getTexture(Texture::baloon), bonusConfig.frameSize, {1.25f, 1.25f});
-	//this->initBonusSprite(this->type);
+	this->initObjectSprite(ResourceManager::get().getTexture(Texture::baloon), bonusConfig.frameSize, bonusConfig.frameScale);
+	this->initBonusSprite(this->type);
 }
 
 void Bonus::initBonusSprite(BonusType type)
 {
 	switch (type)
 	{
-	case BonusType::scoreChanger: break;
+	case BonusType::scoreChanger:
+	{
+		this->bonusSprite.emplace(ResourceManager::get().getTexture(Texture::score_changer));
+		break;
+	}
 	case BonusType::shield: break;
 	case BonusType::gravity: break;
 
 	default:;
 	}
+
+	sf::Vector2f bonusSpriteCenter = this->bonusSprite->getLocalBounds().getCenter();
+	float bonusSpriteScale = MapObject::getObjectSize().x / this->bonusSprite->getLocalBounds().size.x * 0.75f;
+
+
+	this->bonusSprite->setOrigin(bonusSpriteCenter);
+	this->bonusSprite->setScale({ bonusSpriteScale, bonusSpriteScale });
 }
 
 void Bonus::update(float deltaTime)
@@ -190,13 +201,17 @@ void Bonus::update(float deltaTime)
 		MapObject::setMoveDirection({ -1.f, -1.f });
 
 	MapObject::update(deltaTime);
-	//this->bonusSprite->setPosition(MapObject::getObjectPosition());
+
+	sf::Vector2f objectPos = MapObject::getObjectPosition();
+	sf::Vector2f objectSize = MapObject::getObjectSize();
+
+	this->bonusSprite->setPosition(objectPos + objectSize /2.f);
 }
 
 void Bonus::draw(sf::RenderTarget& target)
 {
 	MapObject::draw(target);
-	//target.draw(this->bonusSprite.value());
+	target.draw(this->bonusSprite.value());
 }
 
 void Bonus::onNotify(const Event& event)

@@ -3,7 +3,7 @@
 class ResourceManager
 {
 public:
-	enum class TextureID { player, pipeMiddle, pipeEnd, cloud, baloon };
+	enum class TextureID { player, pipeMiddle, pipeEnd, cloud, baloon, score_changer };
 
 private:
 	//private variables
@@ -23,6 +23,7 @@ private:
 		this->initTexture(TextureID::pipeMiddle);
 		this->initTexture(TextureID::pipeEnd);
 		this->initTexture(TextureID::baloon);
+		this->initTexture(TextureID::score_changer);
 		this->initFont();
 	}
 	ResourceManager(const ResourceManager&) = delete;
