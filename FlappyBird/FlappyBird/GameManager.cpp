@@ -61,14 +61,14 @@ template<typename T>
 void GameManager::changeSpawnCondition()
 {
 	//reset passed time
-	this->gameConfig.setObjectTime<T>(0, "passedTime");
+	this->gameConfig.setObjectTime<T>(0, GameConfiguration::TimeType::passedTime);
 
 	//change spawn time for the next cloud
 	int spawnIntervalMin = this->gameConfig.getConfiguration<T>().spawnTimeInterval.first;
 	int spawnIntervalMax = this->gameConfig.getConfiguration<T>().spawnTimeInterval.second;
 
 	int newSpawnTime = this->rand_int(spawnIntervalMin, spawnIntervalMax);
-	this->gameConfig.setObjectTime<T>(newSpawnTime, "spawnTime");
+	this->gameConfig.setObjectTime<T>(newSpawnTime, GameConfiguration::TimeType::spawnTime);
 }
 
 void GameManager::makeObstacles()

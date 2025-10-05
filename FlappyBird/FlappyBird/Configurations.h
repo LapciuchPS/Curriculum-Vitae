@@ -12,7 +12,7 @@ struct SpawnConfiguration
 {
 	float spawnLocationX;
 	float spawnTime;
-	float passedTime = 0;
+	float passedTime = 0.f;
 	std::pair<int, int > spawnTimeInterval;
 };
 
@@ -30,7 +30,6 @@ struct PipeConfiguration : public ObjectConfiguration
 
 	//gap
 	float gapSizeY;
-	sf::Vector2f gapPosition;
 };
 
 struct CloudConfiguration : public ObjectConfiguration, public SpawnConfiguration
@@ -81,13 +80,13 @@ private:
 	template<typename T>
 	inline void addTimeToPassedTime(float deltaTime)
 	{
-		if constexpr (std::is_same_v<T, CloudConfiguration>)
-			this->cloudConfig.passedTime += deltaTime;
-		else if constexpr (std::is_same_v<T, BonusConfiguration>)
-			this->bonusConfig.passedTime += deltaTime;
+		if constexpr (std::is_base_of_v<SpawnConfiguration, T>)
+			const_cast<T&>(getConfiguration<T>()).passedTime += deltaTime;
 	}
 
 public:
+	enum class TimeType {passedTime, spawnTime};
+
 	GameConfiguration(const sf::Vector2u& windowSize = { 1920, 1080 });
 
 	void updatePassedTime(float deltaTime);
@@ -95,21 +94,14 @@ public:
 	template<typename T>
 	inline bool canBeSpawned()
 	{
-		float passedTime;
-		float spawnTime;
-
-		if constexpr (std::is_same_v<T, CloudConfiguration>)
+		if constexpr (std::is_base_of_v<SpawnConfiguration, T>)
 		{
-			passedTime = this->cloudConfig.passedTime;
-			spawnTime = this->cloudConfig.spawnTime;
+			T& config = const_cast<T&>(this->getConfiguration<T>());
+		
+			return config.passedTime >= config.spawnTime;
 		}
-		else if constexpr (std::is_same_v<T, BonusConfiguration>)
-		{
-			passedTime = this->bonusConfig.passedTime;
-			spawnTime = this->bonusConfig.spawnTime;
-		}
-
-		return passedTime >= spawnTime;
+		
+		return false;
 	}
 
 	//getters
@@ -134,30 +126,26 @@ public:
 	template<typename T>
 	inline void setObjectPos(const sf::Vector2f& newPos)
 	{
-		if constexpr (std::is_same_v<T, PipeConfiguration>)
-			this->pipeConfig.gapPosition = newPos;
-		else if constexpr (std::is_same_v<T, CloudConfiguration>)
-			this->cloudConfig.startingPoint = newPos;
-		else if constexpr (std::is_same_v<T, BonusConfiguration>)
-			this->bonusConfig.startingPoint = newPos;
+		T& config = const_cast<T&>(this->getConfiguration<T>());
+
+		config.startingPoint = newPos;
 	}
 
 	template<typename T>
-	inline void setObjectTime(float time, std::string timeName)
+	inline void setObjectTime(float time, TimeType type)
 	{
-		if (timeName == "spawnTime")
+		if constexpr (std::is_base_of_v<SpawnConfiguration, T>)
 		{
-			if constexpr (std::is_same_v<T, CloudConfiguration>)
-				this->cloudConfig.spawnTime = time;
-			else if constexpr (std::is_same_v<T, BonusConfiguration>)
-				this->bonusConfig.spawnTime = time;
-		}
-		else if (timeName == "passedTime")
-		{
-			if constexpr (std::is_same_v<T, CloudConfiguration>)
-				this->cloudConfig.passedTime = 0;
-			else if constexpr (std::is_same_v<T, BonusConfiguration>)
-				this->bonusConfig.passedTime = 0;
+			T& config = const_cast<T&>(this->getConfiguration<T>());
+
+			if (type == TimeType::spawnTime)
+			{
+				config.spawnTime = time;
+			}
+			else if (type == TimeType::passedTime)
+			{
+				config.passedTime = time;
+			}
 		}
 	}
 };

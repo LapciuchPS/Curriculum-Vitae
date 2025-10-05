@@ -28,7 +28,6 @@ void GameConfiguration::initPipeVariables()
 
 	//gap
 	this->pipeConfig.gapSizeY = this->gameWindowSize.y * 0.23f;
-	this->pipeConfig.gapPosition = { 0,0 };
 
 	//space between pipes
 	this->pipeConfig.spawnLocationX = this->gameWindowSize.x * 0.55;

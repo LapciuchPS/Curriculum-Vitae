@@ -28,13 +28,13 @@ void Pipe::initSprite(objectID id)
 Pipe::Pipe(PipeConfiguration pipeConfig, int windowSizeY, bool isAlive):
 	visitedByBird(false), isAlive(isAlive)
 {
-	float holePosY = pipeConfig.gapPosition.y;
+	float holePosY = pipeConfig.startingPoint.y;
 
 	//to assure that the gap is fully on the screen
 	if (holePosY + pipeConfig.gapSizeY > windowSizeY)
 		holePosY -= pipeConfig.gapSizeY;
 
-	this->gap = std::make_unique<MapObject>(sf::Vector2f(pipeConfig.gapPosition.x, holePosY), sf::Vector2f(pipeConfig.size.x , pipeConfig.gapSizeY), pipeConfig.direction, pipeConfig.speed, objectID::undefined, std::make_unique<LinearMovement>());
+	this->gap = std::make_unique<MapObject>(sf::Vector2f(pipeConfig.startingPoint.x, holePosY), sf::Vector2f(pipeConfig.size.x , pipeConfig.gapSizeY), pipeConfig.direction, pipeConfig.speed, objectID::undefined, std::make_unique<LinearMovement>());
 
 	objectID newID = objectID::undefined;
 	float pipeHeight = pipeConfig.size.y;
