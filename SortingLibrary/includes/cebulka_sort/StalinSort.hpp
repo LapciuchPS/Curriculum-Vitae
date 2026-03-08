@@ -2,11 +2,8 @@
 #define STALIN_SORT_HPP
 
 #include "Predicators.hpp"
-
 #include <iterator>
-#include <unordered_map>
-#include <algorithm>
-#include <functional>
+#include <forward_list>
 
 namespace ceb
 {
