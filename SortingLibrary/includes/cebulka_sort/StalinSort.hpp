@@ -1,7 +1,7 @@
 #ifndef STALIN_SORT_HPP
 #define STALIN_SORT_HPP
 
-#include "Predicators.hpp"
+#include "library_details/Predicators.hpp"
 #include <iterator>
 #include <forward_list>
 

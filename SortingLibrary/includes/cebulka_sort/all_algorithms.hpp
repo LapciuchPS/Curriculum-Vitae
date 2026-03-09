@@ -1,4 +1,4 @@
 #pragma once
 
-#include "Predicators.hpp"
+#include "library_details/Predicators.hpp"
 #include "StalinSort.hpp"
