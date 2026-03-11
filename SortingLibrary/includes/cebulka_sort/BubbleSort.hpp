@@ -1,7 +1,7 @@
 #ifndef BUBBLE_SORT_HPP
 #define BUBBLE_SORT_HPP
 
-#include <cebulka_sort/library_details/Predicators.hpp>
+#include "library_details/Predicators.hpp"
 #include <algorithm>
 #include <iterator>
 
