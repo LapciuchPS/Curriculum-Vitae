@@ -7,10 +7,10 @@
 
 namespace ceb
 {
-	template<typename Container_it, typename Condition = ceb::decreasingly_t>
+	template<typename Container_it, typename Condition = ceb::details::decreasingly_t>
 	void bubble_sort(Container_it begin_it, Container_it end_it, Condition condition = {})
 	{
-		if (begin_it == end_it || std::next(begin_it) == end_it)
+		if (not ceb::details::is_sortable(begin_it, end_it))
 			return;
 
 		Container_it last_it = end_it;

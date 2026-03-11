@@ -3,13 +3,13 @@
 
 #include <iterator>
 
-namespace ceb
+namespace ceb::details
 {
 	//extra algorithms used for sorting
 	template<typename Container_it>
 	bool is_sortable(Container_it begin_it, Container_it end_it)
 	{
-		return (begin_it == end_it || ++begin_it == end_it) ? false : true;
+		return (begin_it == end_it || std::next(begin_it) == end_it) ? false : true;
 	}
 
 	template<typename Container_it>
@@ -22,7 +22,7 @@ namespace ceb
 
 		return previous_it;
 	}
-	
+
 	//defined sorting conditions
 	struct increasingly_t
 	{
@@ -41,9 +41,14 @@ namespace ceb
 			return el1 >= el2;
 		}
 	};
-
-	constexpr increasingly_t increasingly{};
-	constexpr decreasingly_t decreasingly{};
 }
+
+namespace ceb
+{
+	constexpr details::increasingly_t increasingly{};
+	constexpr details::decreasingly_t decreasingly{};
+}
+
+
 
 #endif
