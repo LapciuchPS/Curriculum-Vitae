@@ -7,7 +7,7 @@
 
 namespace ceb
 {
-	template<typename Container_it, typename Condition = ceb::details::decreasingly_t>
+	template<typename Container_it, typename Condition = ceb::details::increasingly_t>
 	void bubble_sort(Container_it begin_it, Container_it end_it, Condition condition = {})
 	{
 		if (not ceb::details::is_sortable(begin_it, end_it))

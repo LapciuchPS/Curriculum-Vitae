@@ -8,7 +8,7 @@
 namespace ceb
 {
 	//works for vector, list and deque container
-	template<typename Container, typename Condition = ceb::increasingly_t>
+	template<typename Container, typename Condition = ceb::details::increasingly_t>
 	void stalin_sort(Container& container, Condition condition = {})
 	{
 		if (container.empty())
@@ -20,7 +20,6 @@ namespace ceb
 
 		while (next_it != container.end())
 		{
-			
 			if (not condition(last_kept, *next_it))
 				next_it = container.erase(next_it);
 			else
@@ -32,7 +31,7 @@ namespace ceb
 		}
 	}
 
-	template<typename T, typename Condition = ceb::increasingly_t>
+	template<typename T, typename Condition = ceb::details::increasingly_t>
 	void stalin_sort(std::forward_list<T>& forward_list, Condition condition = {})
 	{
 		if (forward_list.empty())
