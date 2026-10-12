@@ -17,7 +17,14 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+private slots:
+    void on_horizontalSlider_threads_number_choice_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
+
+    uint8_t chosen_threads_num{};
+
+    void updateThreadsNumberChoiceLabel();
 };
 #endif // MAINWINDOW_H

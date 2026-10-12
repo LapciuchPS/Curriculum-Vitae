@@ -6,9 +6,26 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    this->chosen_threads_num = this->ui->horizontalSlider_threads_number_choice->value();
+    this->updateThreadsNumberChoiceLabel();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::updateThreadsNumberChoiceLabel()
+{
+    QString label_preinfo = QStringLiteral("Threads number: %1");
+    int curr_threads_num = this->ui->horizontalSlider_threads_number_choice->value();
+
+    this->ui->label_threads_number_choice->setText(label_preinfo.arg(curr_threads_num));
+}
+
+void MainWindow::on_horizontalSlider_threads_number_choice_valueChanged(int value)
+{
+    this->updateThreadsNumberChoiceLabel();
+}
+
