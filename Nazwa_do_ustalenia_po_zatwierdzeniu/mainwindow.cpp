@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "popupwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,13 +35,13 @@ void MainWindow::on_pushButton_modify_picture_clicked()
 {
     if(not this->isLibraryChosen())
     {
-        //generate warning
+        popupwindow::generateWarningMessage(QStringLiteral("No library chosen! Please choose one."));
         return;
     }
 
-    if(not this->isPictureSelected())
+    if(not this->isPremodifyPictureSelected())
     {
-        //generate warning.
+        popupwindow::generateWarningMessage(QStringLiteral("No picture selected! Please, select one."));
         return;
     }
 
@@ -48,14 +49,11 @@ void MainWindow::on_pushButton_modify_picture_clicked()
 
 bool MainWindow::isLibraryChosen()
 {
-    bool cpp_pressed = this->ui->radioButton_cpp_library->isChecked();
-    bool asm_pressed = this->ui->radioButton_assembler_library->isChecked();
-
-    return cpp_pressed || asm_pressed;
+    return this->ui->radioButton_cpp_library->isChecked() || this->ui->radioButton_assembler_library->isChecked();
 }
 
-bool MainWindow::isPictureSelected()
+bool MainWindow::isPremodifyPictureSelected()
 {
-   return this->ui->label_premodify_picture->pixmap().isNull();
+   return not this->ui->label_premodify_picture->pixmap().isNull();
 }
 

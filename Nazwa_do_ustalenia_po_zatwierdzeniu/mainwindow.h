@@ -28,7 +28,7 @@ private:
     uint8_t chosen_threads_num{};
 
     bool isLibraryChosen();
-    bool isPictureSelected();
+    bool isPremodifyPictureSelected();
     void updateThreadsNumberChoiceLabel();
 };
 #endif // MAINWINDOW_H
