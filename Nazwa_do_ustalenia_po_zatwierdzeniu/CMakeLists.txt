@@ -11,6 +11,7 @@ qt_add_executable(Nazwa_do_ustalenia_po_zatwierdzeniu
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+    popupwindow.h popupwindow.cpp popupwindow.ui
 )
 
 target_link_libraries(Nazwa_do_ustalenia_po_zatwierdzeniu
