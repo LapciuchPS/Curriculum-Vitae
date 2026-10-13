@@ -20,11 +20,15 @@ public:
 private slots:
     void on_horizontalSlider_threads_number_choice_valueChanged(int value);
 
+    void on_pushButton_modify_picture_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     uint8_t chosen_threads_num{};
 
+    bool isLibraryChosen();
+    bool isPictureSelected();
     void updateThreadsNumberChoiceLabel();
 };
 #endif // MAINWINDOW_H

@@ -29,3 +29,33 @@ void MainWindow::on_horizontalSlider_threads_number_choice_valueChanged(int valu
     this->updateThreadsNumberChoiceLabel();
 }
 
+
+void MainWindow::on_pushButton_modify_picture_clicked()
+{
+    if(not this->isLibraryChosen())
+    {
+        //generate warning
+        return;
+    }
+
+    if(not this->isPictureSelected())
+    {
+        //generate warning.
+        return;
+    }
+
+}
+
+bool MainWindow::isLibraryChosen()
+{
+    bool cpp_pressed = this->ui->radioButton_cpp_library->isChecked();
+    bool asm_pressed = this->ui->radioButton_assembler_library->isChecked();
+
+    return cpp_pressed || asm_pressed;
+}
+
+bool MainWindow::isPictureSelected()
+{
+   return this->ui->label_premodify_picture->pixmap().isNull();
+}
+
