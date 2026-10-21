@@ -29,6 +29,9 @@ private:
 
     bool isLibraryChosen();
     bool isPremodifyPictureSelected();
+    bool canModificationBeStarted();
     void updateThreadsNumberChoiceLabel();
+    void initEffectsList();
+    void modifyPicture();
 };
 #endif // MAINWINDOW_H

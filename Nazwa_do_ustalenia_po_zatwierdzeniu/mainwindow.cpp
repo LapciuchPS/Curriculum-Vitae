@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "popupwindow.h"
+#include "effects.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->chosen_threads_num = this->ui->horizontalSlider_threads_number_choice->value();
     this->updateThreadsNumberChoiceLabel();
+
+    this->initEffectsList();
 }
 
 MainWindow::~MainWindow()
@@ -25,6 +28,28 @@ void MainWindow::updateThreadsNumberChoiceLabel()
     this->ui->label_threads_number_choice->setText(label_preinfo.arg(curr_threads_num));
 }
 
+void MainWindow::initEffectsList()
+{
+    QList<QPair<effect::EFFECT_NAME, QString>> effects = {
+        {effect::EFFECT_NAME::SEPIA_EFFECT, "Sepia effect"},
+        {effect::EFFECT_NAME::VIGNETTE_EFFECT, "Vignette effect"}
+    };
+
+    for(const auto& effect : effects)
+    {
+        QListWidgetItem* item = new QListWidgetItem(effect.second, this->ui->listWidget_effects_widget);
+
+        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+        item->setCheckState(Qt::Unchecked);
+        item->setData(Qt::UserRole, static_cast<int>(effect.first));
+    }
+}
+
+void MainWindow::modifyPicture()
+{
+    //iterate through the list widget, and run accurate function;
+}
+
 void MainWindow::on_horizontalSlider_threads_number_choice_valueChanged(int value)
 {
     this->updateThreadsNumberChoiceLabel();
@@ -33,18 +58,10 @@ void MainWindow::on_horizontalSlider_threads_number_choice_valueChanged(int valu
 
 void MainWindow::on_pushButton_modify_picture_clicked()
 {
-    if(not this->isLibraryChosen())
-    {
-        popupwindow::generateWarningMessage(QStringLiteral("No library chosen! Please choose one."));
+    if(not this->canModificationBeStarted())
         return;
-    }
 
-    if(not this->isPremodifyPictureSelected())
-    {
-        popupwindow::generateWarningMessage(QStringLiteral("No picture selected! Please, select one."));
-        return;
-    }
-
+    this->modifyPicture();
 }
 
 bool MainWindow::isLibraryChosen()
@@ -55,5 +72,22 @@ bool MainWindow::isLibraryChosen()
 bool MainWindow::isPremodifyPictureSelected()
 {
    return not this->ui->label_premodify_picture->pixmap().isNull();
+}
+
+bool MainWindow::canModificationBeStarted()
+{
+    if(not this->isLibraryChosen())
+    {
+        popupwindow::generateWarningMessage(QStringLiteral("No library chosen! Please choose one."));
+        return false;
+    }
+
+    if(not this->isPremodifyPictureSelected())
+    {
+        popupwindow::generateWarningMessage(QStringLiteral("No picture selected! Please, select one."));
+        return false;
+    }
+
+    return true;
 }
 

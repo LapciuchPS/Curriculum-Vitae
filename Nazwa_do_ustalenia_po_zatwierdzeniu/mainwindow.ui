@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>630</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,13 +24,16 @@
      </rect>
     </property>
     <property name="title">
-     <string>Choose the source library:</string>
+     <string>Choose the source library</string>
     </property>
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
       <widget class="QRadioButton" name="radioButton_cpp_library">
        <property name="text">
         <string>CPP</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -46,8 +49,8 @@
    <widget class="QPushButton" name="pushButton_modify_picture">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>480</y>
+      <x>310</x>
+      <y>570</y>
       <width>111</width>
       <height>25</height>
      </rect>
@@ -59,20 +62,13 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>450</y>
+      <x>520</x>
+      <y>440</y>
       <width>231</width>
       <height>71</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_threads_number_choise">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_threads_number_choice">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QSlider" name="horizontalSlider_threads_number_choice">
        <property name="minimum">
@@ -89,6 +85,13 @@
        </property>
        <property name="tickInterval">
         <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_threads_number_choice">
+       <property name="text">
+        <string>TextLabel</string>
        </property>
       </widget>
      </item>
@@ -190,6 +193,32 @@
       </layout>
      </item>
     </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_operation_choice">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>430</y>
+      <width>181</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Choose the wanted effect</string>
+    </property>
+    <widget class="QListWidget" name="listWidget_effects_widget">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>181</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::DragDropMode::InternalMove</enum>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
