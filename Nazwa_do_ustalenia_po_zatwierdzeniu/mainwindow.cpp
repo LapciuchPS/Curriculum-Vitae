@@ -47,7 +47,19 @@ void MainWindow::initEffectsList()
 
 void MainWindow::modifyPicture()
 {
-    //iterate through the list widget, and run accurate function;
+    for(size_t i=0; i<this->ui->listWidget_effects_widget->count(); ++i)
+    {
+        QListWidgetItem* item = this->ui->listWidget_effects_widget->item(i);
+
+        if(item->checkState() == Qt::Unchecked)
+            continue;
+
+        int operation_id = item->data(Qt::UserRole).toInt();
+
+        effect::EFFECT_NAME curr_effect = static_cast<effect::EFFECT_NAME>(operation_id);
+
+        //call a function to modify the picture
+    }
 }
 
 void MainWindow::on_horizontalSlider_threads_number_choice_valueChanged(int value)
