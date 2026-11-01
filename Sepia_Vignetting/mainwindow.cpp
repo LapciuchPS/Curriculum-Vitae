@@ -3,6 +3,10 @@
 #include "popupwindow.h"
 #include "effects.h"
 
+#include <QFileDialog>
+#include <QPixmap>
+#include <QImage>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -13,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->updateThreadsNumberChoiceLabel();
 
     this->initEffectsList();
+    this->initLibSourcesTable();
 }
 
 MainWindow::~MainWindow()
@@ -45,8 +50,18 @@ void MainWindow::initEffectsList()
     }
 }
 
+void MainWindow::initLibSourcesTable()
+{
+    this->lib_sources_table.addButton(this->ui->radioButton_assembler_library, static_cast<int>(effect::ALGORITHM_SOURCE::ASM));
+    this->lib_sources_table.addButton(this->ui->radioButton_cpp_library, static_cast<int>(effect::ALGORITHM_SOURCE::CPP));
+}
+
 void MainWindow::modifyPicture()
 {
+    QImage base_image(this->ui->label_premodify_picture->pixmap().toImage());
+
+    //format picture here
+
     for(size_t i=0; i<this->ui->listWidget_effects_widget->count(); ++i)
     {
         QListWidgetItem* item = this->ui->listWidget_effects_widget->item(i);
@@ -57,9 +72,15 @@ void MainWindow::modifyPicture()
         int operation_id = item->data(Qt::UserRole).toInt();
 
         effect::EFFECT_NAME curr_effect = static_cast<effect::EFFECT_NAME>(operation_id);
+        effect::ALGORITHM_SOURCE curr_source = static_cast<effect::ALGORITHM_SOURCE>(this->lib_sources_table.checkedId());
 
-        //call a function to modify the picture
+        effect::Func* curr_func = effect::getEffectFunction(curr_source, curr_effect);
+
+        base_image = curr_func(base_image);
     }
+
+    QPixmap modified_pixmap{QPixmap::fromImage(base_image)};
+    this->ui->label_modified_picture->setPixmap(modified_pixmap);
 }
 
 void MainWindow::on_horizontalSlider_threads_number_choice_valueChanged(int value)
@@ -103,3 +124,24 @@ bool MainWindow::canModificationBeStarted()
     return true;
 }
 
+void MainWindow::on_pushButton_choose_picture_clicked()
+{
+    QString file_name = QFileDialog::getOpenFileName(this, "Choose picture", "", "Pictures (*.png *.jpg *.jpeg *.bmp)");
+
+    if(file_name.isEmpty())
+        return;
+
+    QPixmap chosen_picture (file_name);
+
+    if(chosen_picture.isNull())
+        return;
+
+    this->scalePixmap(chosen_picture, *this->ui->label_premodify_picture);
+    this->ui->label_premodify_picture->setPixmap(chosen_picture);
+}
+
+void MainWindow::scalePixmap(QPixmap &pixmap, const QLabel &label)
+{
+    QSize base_size = label.contentsRect().size();
+    pixmap = pixmap.scaled(base_size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+}

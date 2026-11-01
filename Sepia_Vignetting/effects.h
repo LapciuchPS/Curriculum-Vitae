@@ -2,8 +2,7 @@
 #define EFFECTS_H
 
 #include <QString>
-
-#include <array>
+#include <QImage>
 
 namespace effect
 {
@@ -12,8 +11,8 @@ namespace effect
 
     QString getEffectStringName(EFFECT_NAME name);
 
-    using FuncPtr = void();
-    FuncPtr* getEffectFunction(ALGORITHM_SOURCE code_source, EFFECT_NAME name);
+    using Func = QImage(QImage image);
+    Func* getEffectFunction(ALGORITHM_SOURCE code_source, EFFECT_NAME name);
 }
 
 #endif // EFFECTS_H
