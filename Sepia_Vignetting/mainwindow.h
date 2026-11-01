@@ -35,7 +35,7 @@ private:
     bool isLibraryChosen();
     bool isPremodifyPictureSelected();
     bool canModificationBeStarted();
-    void updateThreadsNumberChoiceLabel();
+    void updateThreadsNumberChoiceSpinBox();
     void initEffectsList();
     void initLibSourcesTable();
     void modifyPicture();
