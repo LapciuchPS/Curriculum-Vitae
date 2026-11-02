@@ -11,7 +11,17 @@ namespace effect
 
     QString getEffectStringName(EFFECT_NAME name);
 
-    using Func = QImage(QImage image);
+    struct EffectParams
+    {
+        unsigned char* bit_ptr{};
+        int start_row{};
+        int end_row{};
+        int width{};
+        int height{};
+        int bytes_per_line{};
+    };
+
+    using Func = void(const EffectParams& params);
     Func* getEffectFunction(ALGORITHM_SOURCE code_source, EFFECT_NAME name);
 }
 
