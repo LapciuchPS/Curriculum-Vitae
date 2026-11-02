@@ -1,6 +1,8 @@
 #ifndef EFFECTS_H
 #define EFFECTS_H
 
+#include "libs/ImageEffect_api.h"
+
 #include <QString>
 #include <QImage>
 
@@ -11,17 +13,17 @@ namespace effect
 
     QString getEffectStringName(EFFECT_NAME name);
 
-    struct EffectParams
-    {
-        unsigned char* bit_ptr{};
-        int start_row{};
-        int end_row{};
-        int width{};
-        int height{};
-        int bytes_per_line{};
-    };
+    // struct EffectParams
+    // {
+    //     unsigned char* bit_ptr{};
+    //     int start_row{};
+    //     int end_row{};
+    //     int width{};
+    //     int height{};
+    //     int bytes_per_line{};
+    // };
 
-    using Func = void(const EffectParams& params);
+    //using Func = void(const EffectParams& params);
     Func* getEffectFunction(ALGORITHM_SOURCE code_source, EFFECT_NAME name);
 }
 
