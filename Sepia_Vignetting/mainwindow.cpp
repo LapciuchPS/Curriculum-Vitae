@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "popupwindow.h"
 #include "effects.h"
+#include "libs/ImageEffects_api.h"
 
 #include <thread>
 #include <vector>
@@ -93,21 +94,25 @@ void MainWindow::modifyPicture()
         effect::EFFECT_NAME curr_effect = static_cast<effect::EFFECT_NAME>(operation_id);
         effect::ALGORITHM_SOURCE curr_source = static_cast<effect::ALGORITHM_SOURCE>(this->lib_sources_table.checkedId());
 
-        effect::Func* curr_func = effect::getEffectFunction(curr_source, curr_effect);
+        Func* curr_func = effect::getEffectFunction(curr_source, curr_effect);
 
         for(int i = 0;i<thread_num - 1;++i)
         {
             start_row = i*lines_per_thread;
             end_row = (i+1)*lines_per_thread;
 
-            std::thread curr_thread(curr_func, effect::EffectParams{bit_ptr, start_row, end_row, image_width, image_height, bytes_per_line});
-            threads.push_back(std::move(curr_thread));
+            EffectParams params = {bit_ptr, start_row, end_row, image_width, image_height, bytes_per_line};
+            threads.emplace_back([curr_func, params](){
+                curr_func(&params);
+            });
         }
 
         start_row = (thread_num - 1)*lines_per_thread;
         end_row = image_height;
-        std::thread curr_thread(curr_func, effect::EffectParams{bit_ptr, start_row, end_row, image_width, image_height, bytes_per_line});
-        threads.push_back(std::move(curr_thread));
+        EffectParams last_params = {bit_ptr, start_row, end_row, image_width, image_height, bytes_per_line};
+        threads.emplace_back([curr_func, last_params](){
+            curr_func(&last_params);
+        });
 
         std::for_each(threads.begin(), threads.end(), [](std::thread& curr_thread){curr_thread.join();});
     }

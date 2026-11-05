@@ -14,6 +14,6 @@ extern "C"
 
     using Func = void(const EffectParams* params);
 
-    void doSepiaEffectCPP(const EffectParams* params);
-    void doVignetteEffectCPP(const EffectParams* params);
+    __declspec(dllexport) void doSepiaEffectCPP(const EffectParams* params);
+    __declspec(dllexport) void doVignetteEffectCPP(const EffectParams* params);
 }

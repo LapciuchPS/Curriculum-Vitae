@@ -1,5 +1,5 @@
 #include "effects.h"
-#include "libs/ImageEffect_api.h"
+#include "libs/ImageEffects_api.h"
 
 #include <array>
 #include <algorithm>

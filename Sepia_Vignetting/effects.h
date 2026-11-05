@@ -1,7 +1,7 @@
 #ifndef EFFECTS_H
 #define EFFECTS_H
 
-#include "libs/ImageEffect_api.h"
+#include "libs/ImageEffects_api.h"
 
 #include <QString>
 #include <QImage>

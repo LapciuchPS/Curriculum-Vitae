@@ -19,7 +19,7 @@ target_link_libraries(Sepia_Vignetting
     PRIVATE
         Qt::Core
         Qt::Widgets
-        ${CMAKE_CURRENT_SOURCE_DIR}/libs/ImageEffectCPP.lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/ImageEffectsCPP.lib
 )
 
 target_include_directories(Sepia_Vignetting
