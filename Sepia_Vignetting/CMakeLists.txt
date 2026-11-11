@@ -20,7 +20,25 @@ target_link_libraries(Sepia_Vignetting
     PRIVATE
         Qt::Core
         Qt::Widgets
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/ImageEffectsCPP.lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/ImageEffectsASM.lib
 )
+
+target_include_directories(Sepia_Vignetting
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs
+)
+
+add_custom_command(TARGET Sepia_Vignetting POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/libs/ImageEffectsCPP.dll"
+        "$<TARGET_FILE_DIR:Sepia_Vignetting>"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/libs/ImageEffectsASM.dll"
+        "$<TARGET_FILE_DIR:Sepia_Vignetting>"
+    COMMENT "Coping ImageEffectsCPP.dll and ImageEffectsASM.dll to the catalog with the .exe file..."
+)
+# =============================================================================
 
 install(TARGETS Sepia_Vignetting
     BUNDLE  DESTINATION .

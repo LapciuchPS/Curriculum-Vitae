@@ -4,9 +4,15 @@
 #include "effects.h"
 #include "timemeter.h"
 
+#include "libs/ImageEffects_api.h"
+
+#include <thread>
+#include <vector>
+
 #include <QFileDialog>
 #include <QPixmap>
 #include <QImage>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -58,7 +64,26 @@ void MainWindow::initLibSourcesTable()
 
 void MainWindow::modifyPicture()
 {
+    //preparing threads
+    int thread_num = this->ui->spinBox_threads_number_choice->value();
+    std::vector<std::thread> threads{};
+    threads.reserve(thread_num);
+
+    //preparing the image
     QImage base_image(this->ui->label_premodify_picture->pixmap().toImage());
+    base_image = base_image.convertToFormat(QImage::Format_ARGB32);
+
+    uchar* bit_ptr = base_image.bits();
+    int bytes_per_line = base_image.bytesPerLine();
+    int image_width = base_image.width();
+    int image_height = base_image.height();
+
+    int lines_per_thread = base_image.height() / thread_num;
+    int start_row{};
+    int end_row{};
+
+    //preparing timer
+    TimeMeter timer{};
 
     for(size_t i=0; i<this->ui->listWidget_effects_widget->count(); ++i)
     {
@@ -67,15 +92,41 @@ void MainWindow::modifyPicture()
         if(item->checkState() == Qt::Unchecked)
             continue;
 
+        threads.clear();
+
         int operation_id = item->data(Qt::UserRole).toInt();
 
         effect::EFFECT_NAME curr_effect = static_cast<effect::EFFECT_NAME>(operation_id);
         effect::ALGORITHM_SOURCE curr_source = static_cast<effect::ALGORITHM_SOURCE>(this->lib_sources_table.checkedId());
 
-        effect::Func* curr_func = effect::getEffectFunction(curr_source, curr_effect);
+        Func* curr_func = effect::getEffectFunction(curr_source, curr_effect);
 
-        base_image = curr_func(base_image);
+        timer.startTimeSurvey();
+
+        for(int i = 0;i<thread_num - 1;++i)
+        {
+            start_row = i*lines_per_thread;
+            end_row = (i+1)*lines_per_thread;
+
+            EffectParams params = {bit_ptr, start_row, end_row, image_width, image_height, bytes_per_line};
+            threads.emplace_back([curr_func, params](){
+                curr_func(&params);
+            });
+        }
+
+        start_row = (thread_num - 1)*lines_per_thread;
+        end_row = image_height;
+        EffectParams last_params = {bit_ptr, start_row, end_row, image_width, image_height, bytes_per_line};
+        threads.emplace_back([curr_func, last_params](){
+            curr_func(&last_params);
+        });
+
+        std::for_each(threads.begin(), threads.end(), [](std::thread& curr_thread){curr_thread.join();});
+
+        timer.endTimeSurvey();
     }
+
+
 
     QPixmap modified_pixmap{QPixmap::fromImage(base_image)};
     this->ui->label_modified_picture->setPixmap(modified_pixmap);
@@ -143,3 +194,9 @@ void MainWindow::scalePixmap(QPixmap &pixmap, const QLabel &label)
     QSize base_size = label.contentsRect().size();
     pixmap = pixmap.scaled(base_size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
+
+void MainWindow::on_pushButton_reset_picture_clicked()
+{
+    this->ui->label_modified_picture->setPixmap(this->ui->label_premodify_picture->pixmap());
+}
+

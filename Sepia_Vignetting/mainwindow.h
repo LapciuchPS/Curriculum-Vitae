@@ -25,6 +25,8 @@ private slots:
 
     void on_pushButton_choose_picture_clicked();
 
+    void on_pushButton_reset_picture_clicked();
+
 private:
     Ui::MainWindow *ui;
 
