@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "popupwindow.h"
 #include "effects.h"
+#include "timemeter.h"
 
 #include <QFileDialog>
 #include <QPixmap>
@@ -58,8 +59,6 @@ void MainWindow::initLibSourcesTable()
 void MainWindow::modifyPicture()
 {
     QImage base_image(this->ui->label_premodify_picture->pixmap().toImage());
-
-    //format picture here
 
     for(size_t i=0; i<this->ui->listWidget_effects_widget->count(); ++i)
     {

@@ -13,6 +13,7 @@ qt_add_executable(Sepia_Vignetting
     mainwindow.ui
     popupwindow.h popupwindow.cpp popupwindow.ui
     effects.h effects.cpp
+    timemeter.h timemeter.cpp
 )
 
 target_link_libraries(Sepia_Vignetting
