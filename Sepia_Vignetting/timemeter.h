@@ -4,13 +4,15 @@
 #include <deque>
 #include <chrono>
 
+using TimeContainer = std::deque<std::chrono::high_resolution_clock::duration>;
+
 class TimeMeter
 {
 public:
     TimeMeter();
 
 private:
-    std::deque<std::chrono::high_resolution_clock::duration> time_surveys{};
+    TimeContainer time_surveys{};
     std::chrono::high_resolution_clock::time_point start_point{};
     std::chrono::high_resolution_clock::time_point end_point{};
     static constexpr size_t max_container_size = 5;
@@ -19,9 +21,11 @@ private:
 
 public:
 
+    bool isFull() const;
     void startTimeSurvey();
     void endTimeSurvey();
     void addTimeSurvey();
+    void clearSurveysContainer();
 
     template <typename TargetUnitTime>
     TargetUnitTime getMeanSurveys()
@@ -29,6 +33,8 @@ public:
         std::chrono::high_resolution_clock::duration mean = this->countSurveysMean();
         return std::chrono::duration_cast<TargetUnitTime>(mean);
     }
+
+    const TimeContainer& getTimeSurveys() const;
 
 };
 

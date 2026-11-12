@@ -3,11 +3,11 @@
 #include "popupwindow.h"
 #include "effects.h"
 #include "timemeter.h"
-
 #include "libs/ImageEffects_api.h"
 
 #include <thread>
 #include <vector>
+#include <chrono>
 
 #include <QFileDialog>
 #include <QPixmap>
@@ -82,8 +82,14 @@ void MainWindow::modifyPicture()
     int start_row{};
     int end_row{};
 
-    //preparing timer
-    TimeMeter timer{};
+    //chosen source
+    effect::ALGORITHM_SOURCE curr_source = static_cast<effect::ALGORITHM_SOURCE>(this->lib_sources_table.checkedId());
+    if(curr_source != this->last_source)
+    {
+        this->last_source = curr_source;
+        this->timer.clearSurveysContainer();
+        this->clearSurveyTable();
+    }
 
     for(size_t i=0; i<this->ui->listWidget_effects_widget->count(); ++i)
     {
@@ -97,7 +103,6 @@ void MainWindow::modifyPicture()
         int operation_id = item->data(Qt::UserRole).toInt();
 
         effect::EFFECT_NAME curr_effect = static_cast<effect::EFFECT_NAME>(operation_id);
-        effect::ALGORITHM_SOURCE curr_source = static_cast<effect::ALGORITHM_SOURCE>(this->lib_sources_table.checkedId());
 
         Func* curr_func = effect::getEffectFunction(curr_source, curr_effect);
 
@@ -124,12 +129,39 @@ void MainWindow::modifyPicture()
         std::for_each(threads.begin(), threads.end(), [](std::thread& curr_thread){curr_thread.join();});
 
         timer.endTimeSurvey();
+        timer.addTimeSurvey();
     }
 
-
-
+    this->updateSurveyTable();
     QPixmap modified_pixmap{QPixmap::fromImage(base_image)};
     this->ui->label_modified_picture->setPixmap(modified_pixmap);
+}
+
+void MainWindow::updateSurveyTable()
+{
+    size_t curr_row = 0;
+    for(const std::chrono::high_resolution_clock::duration& survey : this->timer.getTimeSurveys())
+    {
+        long long value = std::chrono::duration_cast<std::chrono::microseconds>(survey).count();
+        QTableWidgetItem* item = new QTableWidgetItem(QString::number(value));
+        this->ui->tableWidget_survey_table->setItem(curr_row, 1, item);
+
+        ++curr_row;
+    }
+
+    if(this->timer.isFull())
+    {
+        long long mean = this->timer.getMeanSurveys<std::chrono::microseconds>().count();
+        QTableWidgetItem* item = new QTableWidgetItem(QString::number(mean));
+        this->ui->tableWidget_survey_table->setItem(curr_row, 1 , item);
+    }
+
+}
+
+void MainWindow::clearSurveyTable()
+{
+    for(size_t i = 0; i<this->ui->tableWidget_survey_table->rowCount(); ++i)
+        delete this->ui->tableWidget_survey_table->takeItem(i, 1);
 }
 
 void MainWindow::on_horizontalSlider_threads_number_choice_valueChanged(int value)

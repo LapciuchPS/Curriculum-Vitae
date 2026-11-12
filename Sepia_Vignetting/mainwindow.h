@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QButtonGroup>
 
+#include "timemeter.h"
+#include "effects.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -32,6 +35,9 @@ private:
 
     uint8_t chosen_threads_num{};
     QButtonGroup lib_sources_table;
+    TimeMeter timer{};
+    effect::ALGORITHM_SOURCE last_source = effect::ALGORITHM_SOURCE::CPP;
+
 
     void scalePixmap(QPixmap& pixmap, const QLabel& label);
     bool isLibraryChosen();
@@ -41,5 +47,7 @@ private:
     void initEffectsList();
     void initLibSourcesTable();
     void modifyPicture();
+    void updateSurveyTable();
+    void clearSurveyTable();
 };
 #endif // MAINWINDOW_H
